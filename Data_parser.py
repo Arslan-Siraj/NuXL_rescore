@@ -49,9 +49,10 @@ def read_features_config(file_: str):
     ms2pip_features = Feature["features"]["MSPIP_features"]
     b_ions = Feature["features"]["ions_b"]
     y_ions = Feature["features"]["ions_y"]
+    corr_all = Feature["features"]["corr_all"]
     intensities_feat = Feature["features"]["intensities"]
     ms2pip_rescore_features = Feature["features"]["MSPIP_rescore_features"]
-    return rt_features, ms2pip_features, b_ions, y_ions, intensities_feat, ms2pip_rescore_features
+    return rt_features, ms2pip_features, b_ions, y_ions, corr_all, intensities_feat, ms2pip_rescore_features
     
     
 def read_fasta(file_: str):
@@ -216,7 +217,7 @@ def filter_str(string_):
     #print("filtered: ", x) 
     return x.replace("]", "")
 
-def extract_intensities(MS2PIP_feat_df, b_ions, y_ions):
+def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
     """
     Extract ms2pip intensties according to b_ions, y_ions specify in config
     MS2PIP_feat_df: Dataframe of intensities format ms2pip_features.py Take_MS2PIP_features()
@@ -272,17 +273,19 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions):
                 y_diff = abs(y_targ - y_pred)
                 feat_list.append(y_diff) #abs(y_diff)
             
-            #code for all ions correlation consideration 
-            '''b_ions_pred = [float(filter_str(x)) for x in ions_pred[:len(ions_pred)//2]]
-            y_ions_pred = [float(filter_str(x)) for x in ions_pred[len(ions_pred)//2:]]
-            b_ions_targ = [float(filter_str(x)) for x in ions_targ[:len(ions_targ)//2]]
-            y_ions_targ = [float(filter_str(x)) for x in ions_targ[len(ions_targ)//2:]]
-            
-            b_corr_coef = pearson_correlation(np.array(b_ions_pred), np.array(b_ions_targ))
-            y_corr_coef = pearson_correlation(np.array(y_ions_pred), np.array(y_ions_targ))'''
-            
-            b_corr_coef = pearson_correlation(np.array(b_pred_), np.array(b_targ_))
-            y_corr_coef = pearson_correlation(np.array(y_pred_), np.array(y_targ_))
+            if corr_all:
+              # all ions correlation consideration 
+              b_ions_pred = [float(filter_str(x)) for x in ions_pred[:len(ions_pred)//2]]
+              y_ions_pred = [float(filter_str(x)) for x in ions_pred[len(ions_pred)//2:]]
+              b_ions_targ = [float(filter_str(x)) for x in ions_targ[:len(ions_targ)//2]]
+              y_ions_targ = [float(filter_str(x)) for x in ions_targ[len(ions_targ)//2:]]
+              
+              b_corr_coef = pearson_correlation(np.array(b_ions_pred), np.array(b_ions_targ))
+              y_corr_coef = pearson_correlation(np.array(y_ions_pred), np.array(y_ions_targ))
+              
+            else:
+              b_corr_coef = pearson_correlation(np.array(b_pred_), np.array(b_targ_))
+              y_corr_coef = pearson_correlation(np.array(y_pred_), np.array(y_targ_))
             
             feat_list.append(max(b_corr_coef, y_corr_coef))
             MSPIP_feat.append(feat_list)
@@ -373,7 +376,7 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
     Returns:
         Annotated protein and peptide ids, extra feature names
     """
-    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, inten_feat, ms2pip_rescore_feat_l =  read_features_config(args.feat_config)
+    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l =  read_features_config(args.feat_config)
    
     list_feat_df = []
     if RT_feature is not None:
@@ -385,7 +388,7 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
          
     if MS2PIP_feature is not None:
       if(b_ions>0 and y_ions>0):
-          selected_intensities, ms2pip_columns = extract_intensities(MS2PIP_feature, b_ions, y_ions)
+          selected_intensities, ms2pip_columns = extract_intensities(MS2PIP_feature, b_ions, y_ions, corr_all)
           print("selecting just Predictions: ", inten_feat)
           if len(inten_feat)==1 and inten_feat[0] == "b_y_corr":
              ms2pip_columns = [] 
