@@ -5,7 +5,7 @@ from argparser import args
 
 def FDR_filtering_perc(perc_result_path: str):
     """
-    Calculate FDR and generate FDR controlled file 1% FDR (percolator results)
+    Calculate FDR and generate FDR controlled file 1%, 100% FDR (percolator results)
     Args:
         perc_result_path: percolator result path 
     Returns:
@@ -107,6 +107,13 @@ def FDR_filtering_perc(perc_result_path: str):
     return outfile_path[0]
 
 def FDR_unique_PSMs(perc_result_path: str):
+    """
+    Calculate FDR and keep the unique peptide per protein, genrate the unique PSMs file
+    Args:
+        perc_result_path: percolator result path 
+    Returns:
+        outfile_path[0]: output file path 
+    """ 
     perc_proteins = []
     perc_peptides = []
 

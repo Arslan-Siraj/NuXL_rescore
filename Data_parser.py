@@ -9,6 +9,11 @@ from scipy.stats import spearmanr
 from functools import reduce
 
 def read_pin_file(file_name:str ):
+    """
+    read pin file: MS2rescore feature file
+    Returns:
+      dataframe of pin file
+    """
     file = open(file_name, 'r')
     Lines = file.readlines()
 
@@ -42,6 +47,11 @@ def read_pin_file(file_name:str ):
 
 
 def read_features_config(file_: str):
+    """
+    read feature-config file
+    Returns:
+      all features setting provided in config file
+    """
     with open(file_, 'r') as f:
         Feature = json.load(f)
 
@@ -56,6 +66,11 @@ def read_features_config(file_: str):
     
     
 def read_fasta(file_: str):
+    """
+    read fasta file
+    Returns:
+      protein ID list of all sequences
+    """
     prot_ls = []
     fasta_sequences = SeqIO.parse(open(file_),'fasta')
     for fasta in fasta_sequences:
@@ -65,12 +80,12 @@ def read_fasta(file_: str):
    
 def peptide_ids_to_dataframe(pep_ids: list) -> pd.DataFrame:
     """
-    Parse a given list of peptide identification to a pandas DataFrame compatible with DeepLC and Alphapeptdeep.
-    See https://github.com/compomics/DeepLC#input-files for more information.
+    Parse a given list of peptide identification to a pandas DataFrame compatible with DeepLC.
+    See https://github.com/compomics/DeepLC input-files for more information.
     Args:
         pep_ids: List containing PeptideIdentification
     Returns:
-        pandas DataFrame with three columns: seq, modifications and tr
+        pandas DataFrame contains columns needed for DeepLC
     """
     # ["seq", "modifications", "tr"] : DeepLC columns
     # ["sequence", "mod_sites", "nAA", "mods", "rt_norm"] : Alphapeptdeep columns
@@ -186,26 +201,28 @@ def peptide_ids_to_dataframe(pep_ids: list) -> pd.DataFrame:
         "mods": mods_ls,
         "rt_norm": tr,
     }
-    print("write in file for test...")
+    #print("write in file for test...")
     #x = pd.DataFrame(data, columns=columns)
     #x.to_csv("test_RT.csv")
     return pd.DataFrame(data, columns=columns)
 
 def pearson_correlation(x, y):
-    # Calculate the means of the two variables
+    """
+    calculate pearson correlation
+    Returns:
+      correlation cofficient
+    """
+
     x_mean = np.mean(x)
     y_mean = np.mean(y)
 
-    # Calculate the standard deviations of the two variables
     x_std = np.std(x)
     y_std = np.std(y)
 
-    # Add a small constant to the denominator to avoid division by zero
-    epsilon = 1e-9  # small constant
+    epsilon = 1e-9  
     x_std += epsilon
     y_std += epsilon
 
-    # Calculate the covariance and correlation coefficients
     cov = np.cov(x, y, ddof=0)[0, 1]
     corr_coef = cov / (x_std * y_std)
 
@@ -222,6 +239,8 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
     Extract ms2pip intensties according to b_ions, y_ions specify in config
     MS2PIP_feat_df: Dataframe of intensities format ms2pip_features.py Take_MS2PIP_features()
     b_ions/y_ions: specify prefix/suffix ions
+    return:
+      intensities features, header of dataframe
     """
     MSPIP_features = ["ions_series", "ions_mz", "ions_pred", "ions_targ"]
 
@@ -322,6 +341,7 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
 
 def Conversion_to_DF(file_name):
     """
+    convert the (.mzTab) format results to the dataframe format
     In: mzTab file 
     Return: Desriptions, Proteins, PSMs DataFrame
     """
@@ -366,7 +386,7 @@ def Conversion_to_DF(file_name):
     
 def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = None, MS2PIP_feature: pd.DataFrame = None, MS2PIP_rescore_feature: pd.DataFrame = None) -> list:
     """
-    Adds a custom meta value containing the RT predictions made by DeepLC/Alphapeptdeep.
+    Adds a custom meta value containing the RT predictions, intensities features.
     Args:
         prot_ids:       protein identifications
         pep_ids:        peptide identifications

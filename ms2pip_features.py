@@ -16,7 +16,7 @@ CONFIG = {  'ms2rescore':
                 'output_path': '',
                 'psm_file': '',
                 'psm_id_pattern': None, 
-                'spectrum_id_pattern': ".*_(controllerType=0 controllerNumber=1 scan=[0-9]+)_.*", 
+                'spectrum_id_pattern': ".*_(controllerType=0 controllerNumber=1 scan=[0-9]+)_.*", #to take the predictions of all rank PSMs
                 'num_cpu': 4}, 
             'ms2pip': {
                 'model': 'HCD', 
@@ -90,7 +90,7 @@ def unique(list1):
 
 def Take_ms2pip_features(psm_list, out_file):
     """
-    Extract MSPIP features (DataFrame of intensities)
+    Extract MSPIP features (DataFrame of intensities), will furthur extract intensity from output file
     """       
     print("update  CONFIG for MS2PIP feature-----")
     config_up = ms2pip.MS2PIPFeatureGenerator(CONFIG)

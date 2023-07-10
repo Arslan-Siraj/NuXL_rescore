@@ -14,13 +14,11 @@ def predict_from_DeepLC(peptides: pd.DataFrame, calibration: pd.DataFrame = None
         calibration: pandas DataFrame with calibration peptide hits (optional)
     """
 
-    #Add RNA modifications
-    features = FeatExtractor("/home/ubuntu/Rescoring/unimod/unimod_to_formula.csv")
-    #FeatExtractor(lib_path_mod=os.path.join(os.path.dirname(os.path.realpath(os.getcwd()+"/Rescoring_investigation_NuXL/")), "unimod/"),)
+    #extract all modifications 
+    #features = FeatExtractor("/home/ubuntu/Rescoring/unimod/unimod_to_formula.csv")
+    features = FeatExtractor(lib_path_mod=os.path.join(os.path.dirname(os.path.realpath(os.getcwd()+"/Rescore_NuXL/")), "unimod/"),)
+    print("NA encoding features taken from : ", os.path.join(os.path.dirname(os.path.realpath(os.getcwd()+"/Rescore_NuXL/")), "unimod/"))
 
-    #withoutPygam model_path
-    #model_path = "/home/ubuntu/Rescoring/RT_deeplc_model/combine_model/noPyGAM/"
-    #/home/ubuntu/DeepLC/DeepLC_NM/full_hc_Train_RNA_NM_
     dlc = DeepLC(
         path_model=[
             args.model_path+"_1fd8363d9af9dcad3be7553c39396960.hdf5",
@@ -44,6 +42,7 @@ def calculate_RTfeatures(feature_df: pd.DataFrame):
 
     """
     Calculate retention time features for rescoring (used in MS2PIP rescore)
+    https://github.com/compomics/ms2rescore/blob/master/ms2rescore/plotting.py (for details)
     Args:
         feature_df: A Dataframe contains rt essential + prediction column 
         write_file: bool, to write RT feature file in out folder

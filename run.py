@@ -35,7 +35,6 @@ def process():
     if RT_predictions_feat_df is None:
         print("Warning RT_predictions not extracted, use -rt_model DeepLC option")
         
-    print("done here!!! ")
   
     MS2PIP_feat_df = None 
     if args.ms2pip:

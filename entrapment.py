@@ -2,8 +2,12 @@ from idXML2df import readAndProcessIdXML
 from pyopenms import *
 import matplotlib.pyplot as plt
 
-# add columns containing FDR and the q-value respectively
 def calcQ(df, scoreColName = 'q-value CSMs', labelColName = 'entrapment'):
+    """
+    calculate the entrapment q values/FDR 
+    Returns:
+      dataframe contains entrapment q-val
+    """
     
     df.sort_values(scoreColName, ascending=True, inplace = True)
     
@@ -14,7 +18,10 @@ def calcQ(df, scoreColName = 'q-value CSMs', labelColName = 'entrapment'):
     return df
 
 def entrapment_calculations(idXML_f , idXML_feat_f, True_prot):
-
+    """
+    entrapment testing, take the two identification file, calculate the entrapment q-value
+    plot entrapment FDR vs Decoy FDR
+    """
     print(">>>>>>>>>>>>>>>>> entreperate entrapment without extra feat <<<<<<<<<<<<")
     idXML_df = readAndProcessIdXML(idXML_f)
     idXML_df_filtered = idXML_df[~idXML_df['accessions'].str.contains(';')]

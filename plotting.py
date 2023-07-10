@@ -8,6 +8,9 @@ from sklearn.metrics import mean_absolute_error
 
 
 def get_extra_feat(keys, values, extra_feat_ls):
+    """
+    helping function to take extra features and non-extra feature (NuXL_feature) with corresponding percolator weight value
+    """
     extra_keys = []
     extra_values = []
     keys_ = []
@@ -27,6 +30,9 @@ def get_extra_feat(keys, values, extra_feat_ls):
     return extra_keys, extra_values, keys_, values_
 
 def plot_weights_perc(weight_path : str, extra_feat_names : list = None):
+    """
+    plot the weight of percolator feature importance in all folds (means)
+    """
     weights_epoch=[]
     weights_mean=[]
     weights_name=[]
@@ -56,6 +62,9 @@ def plot_weights_perc(weight_path : str, extra_feat_names : list = None):
     return True
     
 def get_score_idXML(idXML_file : str):
+    """
+    get score list of identification data
+    """
     protein_ids = []
     peptide_ids = []
     IdXMLFile().load(idXML_file, protein_ids, peptide_ids) 
@@ -68,6 +77,9 @@ def get_score_idXML(idXML_file : str):
           
 
 def plot_comparison_PSMs(feat_perc_idXML : str, perc_idXML: str):
+    """
+    plot comparison of two identification file distribution
+    """
     import seaborn as sns
     XL_01_feat = np.array(get_score_idXML(feat_perc_idXML))
     XL_01 = np.array(get_score_idXML(perc_idXML))
@@ -85,6 +97,9 @@ def plot_comparison_PSMs(feat_perc_idXML : str, perc_idXML: str):
     print("1% XL FDR PSMs "f" without_extra_feat_(XLs): {len(XL_01)} with_extra_feat_(XLs): {len(XL_01_feat)} ")
     
 def comparison_PSMs(feat_perc_idXML : str, perc_idXML: str):
+    """
+    write the no. of 1% CSM FDR comparison of two identification file
+    """
     XL_01_feat = get_score_idXML(feat_perc_idXML)
     XL_01 = get_score_idXML(perc_idXML)
     print("--->>>>> 1% XL FDR without extra features: ", len(XL_01))
@@ -97,6 +112,9 @@ def comparison_PSMs(feat_perc_idXML : str, perc_idXML: str):
      f.write("1% XL FDR with extra features: " + str(len(XL_01_feat)))
     
 def evaluate_linear_regression_plot_(df:pd.DataFrame, x="rt_norm", y="rt_pred", name="evaluate_regression"):
+    """
+    calculate regression evaluation parameters
+    """
     ci=95
     n_sample=10000000
     if len(df) > n_sample:
@@ -135,6 +153,9 @@ def evaluate_linear_regression_plot_(df:pd.DataFrame, x="rt_norm", y="rt_pred", 
     
     
 def plot_RT_predictions(idXML_file:str,name = 'RT_results'):
+    """
+      retention time comparison plot of given identification file.
+    """
     prot_ids = []
     pep_ids = []
     IdXMLFile().load(idXML_file, prot_ids, pep_ids) 
@@ -153,6 +174,9 @@ def plot_RT_predictions(idXML_file:str,name = 'RT_results'):
     
 
 def plot_RT_predictions_comparison(idXML_XL_file:str, idXML_pep_file:str, name = 'RT_comparison'):
+    """
+      retention time comparison plot of XL (idXML:XL_file) and nonXL file (idXML_pep_file).
+    """
     XL_prot_ids = []
     XL_pep_ids = []
     IdXMLFile().load(idXML_XL_file, XL_prot_ids, XL_pep_ids) 
@@ -189,27 +213,13 @@ def plot_RT_predictions_comparison(idXML_XL_file:str, idXML_pep_file:str, name =
     plt.legend()
     #plt.show()
     plt.savefig(args.out + name+".pdf")
-    
-    
-def plot_RT_predictions_new(idXML_file:str,name = 'RT_results'):
-    prot_ids = []
-    pep_ids = []
-    IdXMLFile().load(idXML_file, prot_ids, pep_ids) 
-
-    Observed_RT = []
-    Predicted_RT= []
-
-    for pep_id in pep_ids:
-        Observed_RT.append(pep_id.getRT())
-        for hit in pep_id.getHits():
-            Predicted_RT.append(float(hit.getMetaValue("predicted_retention_time")))
-
-    RT_df = pd.DataFrame({"Observed_RT": Observed_RT, "Predicted_RT": Predicted_RT}, columns=["Observed_RT", "Predicted_RT"])
-     
-    evaluate_linear_regression_plot_new(RT_df, x='Observed_RT', y='Predicted_RT', name = name)
-    
 
 def plot_FDR_plot(idXML_id, idXML_extra):
+    """
+    FDR plot of two input idXML identifications format file
+    idXML_id: without extra feature
+    idXML_extra: with adopted extra feature   
+    """
 
     protein_ids = []
     peptide_ids = []

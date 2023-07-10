@@ -12,6 +12,9 @@ def strToFloat(df):
 
 
 def readAndProcessIdXML(input_file, top=1):
+  """
+  convert the (.idXML) format identification file to dataframe
+  """
   prot_ids = []; pep_ids = []
   IdXMLFile().load(input_file, prot_ids, pep_ids)
   meta_value_keys = []

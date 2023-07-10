@@ -195,6 +195,9 @@ def mod_manipulation(RNA_seq = ''):
 
 
 def seq_encoding(rRNA, DNA_ = False):
+    """
+      generate atomic composition of different XL modifications
+    """
     Encoding = []
     Heading = ['Chem', 'C', 'Cn', 'H', 'Hn', 'N', 'Nn', 'O', 'On', 'P', 'Pn', 'S', 'Sn']
   
@@ -341,6 +344,9 @@ def seq_encoding(rRNA, DNA_ = False):
     return my_tuple
 
 def NA_Feature(rRNA, DNA_ = False, max_len=4):
+    """
+      generate atomic composition feature vector; could be help for any analysis (i-e alphapeptdeep)
+    """
     Encoding = []
     Heading = ['Chem', 'C', 'Cn', 'H', 'Hn', 'N', 'Nn', 'O', 'On', 'P', 'Pn', 'S', 'Sn']
   
