@@ -17,8 +17,10 @@ with the addition of retention time prediction features from fine-tuned deepLC m
 ### Command line interface
 
 ```
-usage: run.py [-h] -id id [-rt_model rt_model] [-calibration calibration] [-model_path model_path] [-out out] [-ms2pip] [-ms2pip_rescore] [-perc_exec perc_exec] [-perc_adapter perc_adapter] [-feat_out]
-              [-ms2pip_path ms2pip_path] [-ms2pip_rescore_path ms2pip_rescore_path] [-mgf mgf] [-peprec peprec] [-feat_config feat_config] [-entrap] [-actual_db actual_db]
+usage: run.py [-h] -id id [-rt_model rt_model] [-calibration calibration] [-model_path model_path] [-unimod unimod]
+              [-out out] [-ms2pip] [-ms2pip_rescore] [-perc_exec perc_exec] [-perc_adapter perc_adapter] [-feat_out]
+              [-ms2pip_path ms2pip_path] [-ms2pip_rescore_path ms2pip_rescore_path] [-mgf mgf] [-peprec peprec]
+              [-feat_config feat_config] [-entrap] [-actual_db actual_db]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -28,6 +30,7 @@ optional arguments:
                         DeepLC calibration data path (.csv)
   -model_path model_path
                         model path with name like full_hc_Train_RNA_All
+  -unimod unimod        unimod/NuXL modification example /unimod/unimod_to_formula.csv
   -out out              output folder path
   -ms2pip               Extract ms2pip features {bool}
   -ms2pip_rescore       Extract ms2pip_rescore features {bool}
@@ -57,7 +60,7 @@ If already MS2Rescore features extracted <br />
 
 ### How to do different analysis? <br />
 #### Used only retention time features in rescoring<br />
-&emsp;```python run.py -id -model_path -calibration -perc_exec -perc_adapter -out``` <br />
+&emsp;```python run.py -id -model_path -unimod -calibration -perc_exec -perc_adapter -out``` <br />
 
 #### Used only intensity features in rescoring<br />
 &emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip True -ms2pip_path  or -mgf``` <br /> 

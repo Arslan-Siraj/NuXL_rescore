@@ -15,10 +15,11 @@ def predict_from_DeepLC(peptides: pd.DataFrame, calibration: pd.DataFrame = None
     """
 
     #extract all modifications 
-    #features = FeatExtractor("/home/ubuntu/Rescoring/unimod/unimod_to_formula.csv")
-    features = FeatExtractor(lib_path_mod=os.path.join(os.path.dirname(os.path.realpath(os.getcwd()+"/Rescore_NuXL/")), "unimod/"),)
-    print("NA encoding features taken from : ", os.path.join(os.path.dirname(os.path.realpath(os.getcwd()+"/Rescore_NuXL/")), "unimod/"))
-
+    if os.path.isfile(args.unimod):
+         features = FeatExtractor(args.unimod)
+    else:
+        print("Error!!! modification file not found at", args.unimod)
+    
     dlc = DeepLC(
         path_model=[
             args.model_path+"_1fd8363d9af9dcad3be7553c39396960.hdf5",

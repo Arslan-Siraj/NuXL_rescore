@@ -28,7 +28,6 @@ parser.add_argument(
     metavar='calibration'
 )
 
-#TODO provide for DeepLC later
 parser.add_argument(
     '-model_path',
     type=str,
@@ -36,6 +35,15 @@ parser.add_argument(
     default=os.getcwd()+"/RT_deeplc_model/generic_model/full_hc_Train_RNA_All",
     help="model path with name like full_hc_Train_RNA_All",
     metavar='model_path'
+)
+
+parser.add_argument(
+    '-unimod',
+    type=str,
+    required=False,
+    default=os.getcwd()+"/unimod/unimod_to_formula.csv",
+    help="unimod/NuXL modification example /unimod/unimod_to_formula.csv",
+    metavar='unimod'
 )
 
 parser.add_argument(
