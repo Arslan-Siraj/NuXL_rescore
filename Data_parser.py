@@ -5,7 +5,7 @@ import math
 from argparser import args
 from Bio import SeqIO
 import numpy as np
-from scipy.stats import spearmanr
+from scipy.stats import pearsonr
 from functools import reduce
 
 def read_pin_file(file_name:str ):
@@ -190,8 +190,6 @@ def peptide_ids_to_dataframe(pep_ids: list) -> pd.DataFrame:
         "seq": sequences,
         "spec_id": spec_id,
         "rank": rank,
-        #"mod_seq":mod_seq_ls,
-        #"XL_loc": XL_loc_ls,
         "modifications": modifications,
         "tr": tr,
         "sequence": sequences,
@@ -249,7 +247,6 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
     #print(len_ions)
     len_ions_ = [len(value) for value in len_ions]
     max_b_y = int(min(len_ions_)/2)
-    both_corr_nan = 0
     if (b_ions>max_b_y) or (y_ions>max_b_y):
         print("Error: Please check the ions_b and ions_y max can be:", max_b_y)
     else:
@@ -275,8 +272,7 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
                 b_targ_.append(b_targ)
                 feat_list.append(b_targ)
                 b_diff = abs(b_targ - b_pred)
-                feat_list.append(b_diff) #abs(b_diff)
-                
+                feat_list.append(b_diff) 
                 
             y_targ_ = []
             y_pred_ = []
@@ -290,22 +286,22 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
                 feat_list.append(y_targ)
                 y_targ_.append(y_targ)
                 y_diff = abs(y_targ - y_pred)
-                feat_list.append(y_diff) #abs(y_diff)
+                feat_list.append(y_diff)
             
             if corr_all:
               # all ions correlation consideration 
-              b_ions_pred = [float(filter_str(x)) for x in ions_pred[:len(ions_pred)//2]]
-              y_ions_pred = [float(filter_str(x)) for x in ions_pred[len(ions_pred)//2:]]
-              b_ions_targ = [float(filter_str(x)) for x in ions_targ[:len(ions_targ)//2]]
-              y_ions_targ = [float(filter_str(x)) for x in ions_targ[len(ions_targ)//2:]]
-              
-              b_corr_coef = pearson_correlation(np.array(b_ions_pred), np.array(b_ions_targ))
-              y_corr_coef = pearson_correlation(np.array(y_ions_pred), np.array(y_ions_targ))
-              
+              b_ions_pred = np.array([float(filter_str(x)) for x in ions_pred[:len(ions_pred)//2]])
+              y_ions_pred = np.array([float(filter_str(x)) for x in ions_pred[len(ions_pred)//2:]])
+              b_ions_targ = np.array([float(filter_str(x)) for x in ions_targ[:len(ions_targ)//2]])
+              y_ions_targ = np.array([float(filter_str(x)) for x in ions_targ[len(ions_targ)//2:]])
+      
+              b_corr_coef, __ = pearsonr(b_ions_pred, b_ions_targ)
+              y_corr_coef, __ = pearsonr(y_ions_pred, y_ions_targ)
+
             else:
               b_corr_coef = pearson_correlation(np.array(b_pred_), np.array(b_targ_))
               y_corr_coef = pearson_correlation(np.array(y_pred_), np.array(y_targ_))
-            
+          
             feat_list.append(max(b_corr_coef, y_corr_coef))
             MSPIP_feat.append(feat_list)
     
@@ -331,8 +327,6 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
 
     if (len(header)!=0 and len(MSPIP_feat)!=0):
         MSPIP_df = pd.DataFrame(MSPIP_feat, columns= header) 
-        MSPIP_df.to_csv(args.out + "intensities_features.csv")
-        print("MSPIP_df: ", MSPIP_df.shape)
     
     MSPIP_df['spec_id'] = MS2PIP_feat_df['spec_id']
     MSPIP_df['rank'] = MS2PIP_feat_df['rank']
@@ -431,7 +425,6 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
              selected_intensities = selected_intensities[ms2pip_columns]
              print("ms2pip_just_pred_", ms2pip_columns)
             
-          print("--->MSPIP_features_added: ", selected_intensities.shape)
           list_feat_df.append(selected_intensities)
           
     if MS2PIP_rescore_feature is not None:
@@ -487,7 +480,6 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
         check_RT = True      
     
     if(check_RT == False):
-      print("called second option")
       All_new_feat = None
       if len(list_feat_df)!=0:
         it = iter(list_feat_df)
@@ -568,7 +560,6 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
             search_parameters.setMetaValue('extra_features', export_to_perc)
             prot_ids[0].setSearchParameters(search_parameters)       
             print("successfully annotated extra features") 
-            
             pep_ids = filter_pepIds
                           
             

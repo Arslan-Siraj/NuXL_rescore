@@ -7,7 +7,7 @@
   "ions_y":3, 
   "//comment": "specify in intensities so, it will extract correspondings _pred: predictions ; _targ: Target ; _diff: Target - predictions; _mz: M/Z of intensities of ions, if want all feat leave empty, b_y_corr compulsory",
   "intensities":["b_y_corr"],
-  "//comment": "please specify, if want to use all ions intensity correlation or not",
+  "//comment": "please specify, if want to use all ions intensity correlation or not", 
   "corr_all": false,
   "MSPIP_rescore_features":["spec_pearson_norm", "ionb_pearson_norm", "iony_pearson_norm", "spec_mse_norm", "ionb_mse_norm", 
                             "iony_mse_norm", "min_abs_diff_norm",	"max_abs_diff_norm", "abs_diff_Q1_norm", 
