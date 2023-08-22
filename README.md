@@ -68,7 +68,8 @@ If already MS2Rescore features extracted <br />
 #### Used only MS2Rescore features in rescoring<br />
 &emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip_rescore (store_true) -ms2pip_rescore_path  or -mgf``` <br /> 
 
-#### *combine will work for adaptation of combine features <br /> 
+#### *will work for adaptation of multiple features e-g RT+intensities as <br /> 
+&emsp;```python run.py -id model_path -calibration -unimod -perc_exec -perc_adapter -out -ms2pip (store_true) -ms2pip_path  or -mgf``` <br />
 
 #### entrapment testing <br />
 &emsp;```run.py -entrap (store_true) -actual_db (actual database of sample)``` <br />
