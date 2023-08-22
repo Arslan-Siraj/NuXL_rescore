@@ -63,10 +63,10 @@ If already MS2Rescore features extracted <br />
 &emsp;```python run.py -id -model_path -unimod -calibration -perc_exec -perc_adapter -out``` <br />
 
 #### Used only intensity features in rescoring<br />
-&emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip True -ms2pip_path  or -mgf``` <br /> 
+&emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip (store_true) -ms2pip_path  or -mgf``` <br /> 
 
 #### Used only MS2Rescore features in rescoring<br />
-&emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip_rescore True -ms2pip_rescore_path  or -mgf``` <br /> 
+&emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip_rescore (store_true) -ms2pip_rescore_path  or -mgf``` <br /> 
 
 #### *combine will work for adaptation of combine features <br /> 
 
