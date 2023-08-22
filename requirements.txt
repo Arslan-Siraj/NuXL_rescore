@@ -1,0 +1,26 @@
+## Rescoring python packages
+############################
+#
+biopython
+numpy
+scipy
+pyopenms
+matplotlib
+tqdm
+statsmodels
+scikit-learn
+psm-utils
+deeplc
+deeplcretrainer
+## MS2rescore should be install from ve-refactoring branch
+git+https://github.com/compomics/ms2rescore.git@v3-refactoring
+#
+## OpenMS
+##############################
+#
+# build openms from source https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/install_linux.html
+# percolator adapter and executable will require should be on path 
+#
+
+
+
