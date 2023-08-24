@@ -8,7 +8,6 @@ from argparser import args
 from psm_utils.io import convert
 from Data_parser import read_pin_file
 import subprocess
-import ms2pip
 from pkg_resources import get_distribution
 
 CONFIG = {  'ms2rescore': 
@@ -100,6 +99,7 @@ def Take_ms2pip_features(psm_list, out_file):
     print("update  CONFIG for MS2PIP feature-----")
     #"ptm": config_up._get_modification_config(psm_list),
     from ms2pip.ms2pipC import MS2PIP
+
     CONFIG["ms2pip"].update(
     {
         "ptm": [
