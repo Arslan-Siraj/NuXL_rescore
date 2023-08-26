@@ -88,8 +88,9 @@ def process():
 
 if __name__ == "__main__":
 
-    print("-----Configuations-----")
-    print(args)
+    print("-----Configuation-----")
+    for attr, value in vars(args).items():
+        print(f"{attr}: {value}")
 
     if args.ms2pip and args.ms2pip_rescore : 
         print("Error! please select ms2rescore features or ms2pip intensity features or combine features like e-g RT+intensities or RT+ms2rescore")
