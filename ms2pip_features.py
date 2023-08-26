@@ -7,8 +7,6 @@ import pandas as pd
 from argparser import args
 from psm_utils.io import convert
 from Data_parser import read_pin_file
-import subprocess
-from pkg_resources import get_distribution
 
 CONFIG = {  'ms2rescore': 
             {   'tmp_path': '', 
@@ -17,7 +15,7 @@ CONFIG = {  'ms2rescore':
                 'psm_file': '',
                 'psm_id_pattern': None, 
                 'spectrum_id_pattern': ".*_(controllerType=0 controllerNumber=1 scan=[0-9]+)_.*", #to take the predictions of all rank PSMs
-                'processes': 1,
+                'processes': 32,
                 'num_cpu': 4}, 
             'ms2pip': {
                 'model': 'HCD', 
@@ -35,7 +33,7 @@ def initilize_CONFIG(mgf_file : str, out_pin_file : str, psm_file: str):
                     'psm_file': psm_file,
                     'psm_id_pattern': None, 
                     'spectrum_id_pattern': ".*_(controllerType=0 controllerNumber=1 scan=[0-9]+)_.*", 
-                    'processes': 1,
+                    'processes': 32,
                     'num_cpu': 32}, 
                 'ms2pip': {
                     'model': 'HCD', 
@@ -189,16 +187,6 @@ def Take_MS2PIP_features():
     """
     file_id = (args.id).split('.')
     file_id_ = file_id[0].split('/')
-
-    print("------check desired ms2pip version----")
-
-    ms2pip_curr_version = get_distribution("ms2pip").version
-    ms2pip_desire_version = "3.11.0"
-    print("ms2pip version: ", ms2pip_curr_version)
-    if ms2pip_curr_version != ms2pip_desire_version :
-        subprocess.run(['pip', 'install', f'ms2pip=={ms2pip_desire_version}', '--pre'])
-        print(f"updated version of ms2pip")
-        subprocess.run(['pip', 'show', f'ms2pip'])
   
     out_pin_file = args.out + file_id_[len(file_id_)-1] +'.pin'
     if args.peprec is None:
@@ -226,17 +214,6 @@ def Take_MS2PIP_rescore_features():
     """
     file_id = (args.id).split('.')
     file_id_ = file_id[0].split('/')
-
-    print("------check desired ms2pip version----")
-
-    ms2pip_curr_version = get_distribution("ms2pip").version
-    ms2pip_desire_version = "4.0.0.dev1"
-    print("ms2pip version: ", ms2pip_curr_version)
-    if ms2pip_curr_version != ms2pip_desire_version :
-        subprocess.run(['pip', 'install', f'ms2pip=={ms2pip_desire_version}', '--pre'])
-        print(f"updated version of ms2pip")
-        subprocess.run(['pip', 'show', f'ms2pip'])
-
     out_pin_file = args.out + file_id_[len(file_id_)-1] +'.pin'
     if args.peprec is None:
         print("converting .idXML to .peprec format")
