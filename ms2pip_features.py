@@ -176,9 +176,11 @@ def Take_ms2pip_features(psm_list, out_file):
         final_PSMs.append(rows_with_rank)
 
     final_psms_df = pd.concat(final_PSMs, join="inner")
-    final_psms_df.to_csv(out_file+"_MSPIP.csv")
-    print("MSPIP features written at: ", out_file+"_MSPIP.csv")
-    return final_psms_df
+    file_name_ = out_file.split('/')
+    file_name = file_name_[len(file_name_)-1]
+    final_psms_df.to_csv(args.out + file_name+"_MSPIP.csv")
+    print("MSPIP features written at: ",args.out + file_name+"_MSPIP.csv")    
+    return args.out + file_name+"_MSPIP.csv"
 
 def Take_MS2PIP_features():
     """
@@ -196,16 +198,16 @@ def Take_MS2PIP_features():
         print(".peprec written at: ", peprec_file)
         args.peprec = peprec_file
 
-    ms2pip_features_df = None
+    ms2pip_features_out = None
     if args.mgf is not None:
         CONFIG = initilize_CONFIG(args.mgf, out_pin_file , args.peprec)
         print("Initialized MS2PIP CONFIG----\n", CONFIG)
         psm_list = get_psm_list(CONFIG["ms2rescore"]["psm_file"])
-        ms2pip_features_df = Take_ms2pip_features(psm_list, file_id[0])
+        ms2pip_features_out = Take_ms2pip_features(psm_list, file_id[0])
     else:
         print("Error: unable_initialized please provide (.mgf) file")
 
-    return ms2pip_features_df
+    return ms2pip_features_out
 
 def Take_MS2PIP_rescore_features():
     """

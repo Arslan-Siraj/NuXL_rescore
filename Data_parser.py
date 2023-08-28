@@ -25,7 +25,7 @@ def read_pin_file(file_name:str ):
     Lines_df.columns = Lines_df.iloc[0]
     Lines_df_ = Lines_df.drop([0])
     Lines_df_.reset_index(drop=True, inplace=True)
-    spectra_ids = list(Lines_df_['PSMId'])
+    spectra_ids = list(Lines_df_['SpecId'])
     
     rank = 0
     rank_list = []
@@ -42,7 +42,7 @@ def read_pin_file(file_name:str ):
         rank = rank +1
         
     Lines_df_['rank'] = rank_list
-    Lines_df_.rename(columns = {'PSMId':'spec_id'}, inplace = True)
+    Lines_df_.rename(columns = {'SpecId':'spec_id'}, inplace = True)
     return Lines_df_
 
 
@@ -244,7 +244,6 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
 
     MSPIP_feat = []
     len_ions = list(MS2PIP_feat_df['ions_series'].str.split(','))
-    #print(len_ions)
     len_ions_ = [len(value) for value in len_ions]
     max_b_y = int(min(len_ions_)/2)
     if (b_ions>max_b_y) or (y_ions>max_b_y):

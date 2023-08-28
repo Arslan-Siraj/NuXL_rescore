@@ -37,7 +37,9 @@ def process():
             MS2PIP_feat_df =  pd.read_csv(args.ms2pip_path)
         else:
             from ms2pip_features import Take_MS2PIP_features
-            MS2PIP_feat_df = Take_MS2PIP_features()
+            MS2PIP_path = Take_MS2PIP_features()
+            MS2PIP_feat_df =  pd.read_csv(MS2PIP_path)
+            
         print("Successfully extracted MS2PIP_Feature :", MS2PIP_feat_df.shape)
     else:
         print("Warning MS2PIP features (intensities) are not included, use -ms2pip True")
