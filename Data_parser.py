@@ -62,7 +62,8 @@ def read_features_config(file_: str):
     corr_all = Feature["features"]["corr_all"]
     intensities_feat = Feature["features"]["intensities"]
     ms2pip_rescore_features = Feature["features"]["MSPIP_rescore_features"]
-    return rt_features, ms2pip_features, b_ions, y_ions, corr_all, intensities_feat, ms2pip_rescore_features
+    ms2pip_mod= Feature["features"]["ms2pip_mod"]
+    return rt_features, ms2pip_features, b_ions, y_ions, corr_all, intensities_feat, ms2pip_rescore_features , ms2pip_mod
     
     
 def read_fasta(file_: str):
@@ -389,7 +390,7 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
     Returns:
         Annotated protein and peptide ids, extra feature names
     """
-    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l =  read_features_config(args.feat_config)
+    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(args.feat_config)
    
     list_feat_df = []
     if RT_feature is not None:

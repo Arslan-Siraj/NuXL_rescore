@@ -6,7 +6,7 @@ from tqdm import tqdm
 import pandas as pd
 from argparser import args
 from psm_utils.io import convert
-from Data_parser import read_pin_file
+from Data_parser import read_pin_file, read_features_config
 
 CONFIG = {  'ms2rescore': 
             {   'tmp_path': '', 
@@ -97,13 +97,11 @@ def Take_ms2pip_features(psm_list, out_file):
     print("update  CONFIG for MS2PIP feature-----")
     #"ptm": config_up._get_modification_config(psm_list),
     from ms2pip.ms2pipC import MS2PIP
+    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(args.feat_config)
 
     CONFIG["ms2pip"].update(
     {
-        "ptm": [
-             "Oxidation,15.994915,opt,M",
-             "Carbamidomethyl,57.021464,opt,C",
-        ],
+        "ptm": ms2pip_mod,
         "sptm": [],
         "gptm": [],
     }
