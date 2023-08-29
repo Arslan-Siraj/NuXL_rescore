@@ -86,7 +86,7 @@ The corresponding features can be update from features-config.json
   "ions_y":3, 
   "//comment": "specify in intensities so, it will extract correspondings _pred: predictions ; _targ: Target ; _diff: Target - predictions; _mz: M/Z of intensities of ions, if want all feat leave empty, b_y_corr compulsory",
   "intensities":["b_y_corr"],
-  "//comment": "please specify, if want to use all ions intensity correlation or not",
+  "//comment": "please specify, if want to use all ions intensity correlation or not", 
   "corr_all": false,
   "MSPIP_rescore_features":["spec_pearson_norm", "ionb_pearson_norm", "iony_pearson_norm", "spec_mse_norm", "ionb_mse_norm", 
                             "iony_mse_norm", "min_abs_diff_norm",	"max_abs_diff_norm", "abs_diff_Q1_norm", 
@@ -103,7 +103,9 @@ The corresponding features can be update from features-config.json
                             "std_abs_diff", "ionb_min_abs_diff",	"ionb_max_abs_diff", "ionb_abs_diff_Q1", "ionb_abs_diff_Q2", 
                             "ionb_abs_diff_Q3", "ionb_mean_abs_diff", "ionb_std_abs_diff", "iony_min_abs_diff", 
                             "iony_max_abs_diff", "iony_abs_diff_Q1", "iony_abs_diff_Q2", "iony_abs_diff_Q3", "iony_mean_abs_diff", 
-                            "iony_std_abs_diff", "dotprod", "dotprod_ionb", "dotprod_iony", "cos", "cos_ionb",	"cos_iony"]
+                            "iony_std_abs_diff", "dotprod", "dotprod_ionb", "dotprod_iony", "cos", "cos_ionb",	"cos_iony"],
+  "//comment": "modification for ms2pip e-g Carbamidomethyl,57.021464,opt,C ",
+  "ms2pip_mod":["Oxidation,15.994915,opt,M"] 
   }
 }
 
