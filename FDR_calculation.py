@@ -1,4 +1,5 @@
 import os 
+import sys
 import pandas as pd
 from pyopenms import *
 from argparser import args
@@ -178,10 +179,13 @@ def run_percolator(infile: str, perc_path: str, percadapter_path: str):
                           "-percolator_executable " + perc_path + " -out_pin "+write_out+"_perc_pin.tab " + \
                           "-weights "+write_out+"_perc.weights -train_best_positive -unitnorm -post_processing_tdc -score_type svm "
 
-    os.system(percadapter_command)   
-    #mzTab_command = args.mzTab_exporter + " -in " + file_out_name[0]+"_perc.idXML" + " -out " + file_out_name[0]+"_perc.mzTab"
-    #os.system(mzTab_command)
-    print("percolator written at : ", write_out+"_perc")
+    return_code = os.system(percadapter_command)
+    if return_code == 0:
+      print("percadapter command ran successfully!")
+      print("percolator written at : ", write_out+"_perc")
+    else:
+        print("Error!! percadapter command encountered an error or failure.") 
+        sys.exit(1)  
 
     return write_out+"_perc"
     

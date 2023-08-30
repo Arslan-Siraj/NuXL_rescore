@@ -1,4 +1,3 @@
-from ms2rescore.feature_generators import ms2pip
 from psm_utils.io.peptide_record import PeptideRecordReader
 from collections import defaultdict
 from psm_utils.io import peptide_record
@@ -6,9 +5,8 @@ from psm_utils.io import write_file
 from tqdm import tqdm
 import pandas as pd
 from argparser import args
-from ms2pip.ms2pipC import MS2PIP
 from psm_utils.io import convert
-from Data_parser import read_pin_file
+from Data_parser import read_pin_file, read_features_config
 
 CONFIG = {  'ms2rescore': 
             {   'tmp_path': '', 
@@ -17,6 +15,7 @@ CONFIG = {  'ms2rescore':
                 'psm_file': '',
                 'psm_id_pattern': None, 
                 'spectrum_id_pattern': ".*_(controllerType=0 controllerNumber=1 scan=[0-9]+)_.*", #to take the predictions of all rank PSMs
+                'processes': 32,
                 'num_cpu': 4}, 
             'ms2pip': {
                 'model': 'HCD', 
@@ -34,6 +33,7 @@ def initilize_CONFIG(mgf_file : str, out_pin_file : str, psm_file: str):
                     'psm_file': psm_file,
                     'psm_id_pattern': None, 
                     'spectrum_id_pattern': ".*_(controllerType=0 controllerNumber=1 scan=[0-9]+)_.*", 
+                    'processes': 32,
                     'num_cpu': 32}, 
                 'ms2pip': {
                     'model': 'HCD', 
@@ -54,6 +54,8 @@ def Take_ms2pip_rescore_features(psm_list):
     Extract MSPIP rescore features (as PSMS_list)
     """
     print("Ms2PIP-rescore features gathering")
+    from ms2rescore.feature_generators import ms2pip
+    
     n_duplicate = defaultdict(lambda: 1)
     number_duplicates_per_spec = 1
 
@@ -67,7 +69,7 @@ def Take_ms2pip_rescore_features(psm_list):
 
     for i in range(1,number_duplicates_per_spec+1):
         
-        ms2pip.MS2PIPFeatureGenerator(CONFIG).add_features(psm_list[[True if x == i else False for x in indices_list ]])      
+        ms2pip.MS2PIPFeatureGenerator(CONFIG,processes=CONFIG["ms2rescore"]["processes"], spectrum_path = CONFIG["ms2rescore"]["spectrum_path"], spectrum_id_pattern = CONFIG["ms2rescore"]["spectrum_id_pattern"]).add_features(psm_list[[True if x == i else False for x in indices_list ]])      
             
 def write_pin(psm_list):
     """
@@ -93,10 +95,13 @@ def Take_ms2pip_features(psm_list, out_file):
     Extract MSPIP features (DataFrame of intensities), will furthur extract intensity from output file
     """       
     print("update  CONFIG for MS2PIP feature-----")
-    config_up = ms2pip.MS2PIPFeatureGenerator(CONFIG)
+    #"ptm": config_up._get_modification_config(psm_list),
+    from ms2pip.ms2pipC import MS2PIP
+    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(args.feat_config)
+
     CONFIG["ms2pip"].update(
     {
-        "ptm": config_up._get_modification_config(psm_list),
+        "ptm": ms2pip_mod,
         "sptm": [],
         "gptm": [],
     }
@@ -169,9 +174,11 @@ def Take_ms2pip_features(psm_list, out_file):
         final_PSMs.append(rows_with_rank)
 
     final_psms_df = pd.concat(final_PSMs, join="inner")
-    final_psms_df.to_csv(out_file+"_MSPIP.csv")
-    print("MSPIP features written at: ", out_file+"_MSPIP.csv")
-    return final_psms_df
+    file_name_ = out_file.split('/')
+    file_name = file_name_[len(file_name_)-1]
+    final_psms_df.to_csv(args.out + file_name+"_MSPIP.csv")
+    print("MSPIP features written at: ",args.out + file_name+"_MSPIP.csv")    
+    return args.out + file_name+"_MSPIP.csv"
 
 def Take_MS2PIP_features():
     """
@@ -189,16 +196,16 @@ def Take_MS2PIP_features():
         print(".peprec written at: ", peprec_file)
         args.peprec = peprec_file
 
-    ms2pip_features_df = None
+    ms2pip_features_out = None
     if args.mgf is not None:
         CONFIG = initilize_CONFIG(args.mgf, out_pin_file , args.peprec)
         print("Initialized MS2PIP CONFIG----\n", CONFIG)
         psm_list = get_psm_list(CONFIG["ms2rescore"]["psm_file"])
-        ms2pip_features_df = Take_ms2pip_features(psm_list, file_id[0])
+        ms2pip_features_out = Take_ms2pip_features(psm_list, file_id[0])
     else:
         print("Error: unable_initialized please provide (.mgf) file")
 
-    return ms2pip_features_df
+    return ms2pip_features_out
 
 def Take_MS2PIP_rescore_features():
     """
@@ -207,7 +214,6 @@ def Take_MS2PIP_rescore_features():
     """
     file_id = (args.id).split('.')
     file_id_ = file_id[0].split('/')
-
     out_pin_file = args.out + file_id_[len(file_id_)-1] +'.pin'
     if args.peprec is None:
         print("converting .idXML to .peprec format")

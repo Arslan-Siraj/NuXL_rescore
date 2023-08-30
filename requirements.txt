@@ -1,21 +1,24 @@
 ## Rescoring python packages
 ############################
 #
-biopython
-numpy
-scipy
-pyopenms
-matplotlib
-tqdm
-statsmodels
-scikit-learn
-psm-utils
-deeplc
-deeplcretrainer
-## MS2pip install from v4.0.0 branch
-git+https://github.com/compomics/ms2pip.git@v4.0.0
+biopython==1.81
+pandas==1.5.3
+numpy==1.22.4
+scipy==1.10.1
+pyopenms==2.7.0
+matplotlib==3.7.2
+tqdm==4.66.1
+statsmodels==0.14.0
+scikit-learn==1.3.0
+psm-utils==0.4.1
+deeplc==1.2.1
+deeplcretrainer==0.1.13
+ms2pip==3.11.0
+#
 ## MS2rescore from v3-refactoring branch
-git+https://github.com/compomics/ms2rescore.git@v3-refactoring
+#pip install git+https://github.com/compomics/ms2rescore.git@v3-refactoring
+#or
+#pip install ms2rescore --pre
 #
 ## OpenMS
 ##############################

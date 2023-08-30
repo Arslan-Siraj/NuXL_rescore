@@ -25,7 +25,7 @@ def read_pin_file(file_name:str ):
     Lines_df.columns = Lines_df.iloc[0]
     Lines_df_ = Lines_df.drop([0])
     Lines_df_.reset_index(drop=True, inplace=True)
-    spectra_ids = list(Lines_df_['PSMId'])
+    spectra_ids = list(Lines_df_['SpecId'])
     
     rank = 0
     rank_list = []
@@ -42,7 +42,7 @@ def read_pin_file(file_name:str ):
         rank = rank +1
         
     Lines_df_['rank'] = rank_list
-    Lines_df_.rename(columns = {'PSMId':'spec_id'}, inplace = True)
+    Lines_df_.rename(columns = {'SpecId':'spec_id'}, inplace = True)
     return Lines_df_
 
 
@@ -62,7 +62,8 @@ def read_features_config(file_: str):
     corr_all = Feature["features"]["corr_all"]
     intensities_feat = Feature["features"]["intensities"]
     ms2pip_rescore_features = Feature["features"]["MSPIP_rescore_features"]
-    return rt_features, ms2pip_features, b_ions, y_ions, corr_all, intensities_feat, ms2pip_rescore_features
+    ms2pip_mod= Feature["features"]["ms2pip_mod"]
+    return rt_features, ms2pip_features, b_ions, y_ions, corr_all, intensities_feat, ms2pip_rescore_features , ms2pip_mod
     
     
 def read_fasta(file_: str):
@@ -244,7 +245,6 @@ def extract_intensities(MS2PIP_feat_df, b_ions, y_ions, corr_all: False):
 
     MSPIP_feat = []
     len_ions = list(MS2PIP_feat_df['ions_series'].str.split(','))
-    #print(len_ions)
     len_ions_ = [len(value) for value in len_ions]
     max_b_y = int(min(len_ions_)/2)
     if (b_ions>max_b_y) or (y_ions>max_b_y):
@@ -390,7 +390,7 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
     Returns:
         Annotated protein and peptide ids, extra feature names
     """
-    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l =  read_features_config(args.feat_config)
+    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(args.feat_config)
    
     list_feat_df = []
     if RT_feature is not None:

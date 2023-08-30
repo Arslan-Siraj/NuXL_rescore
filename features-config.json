@@ -24,7 +24,9 @@
                             "std_abs_diff", "ionb_min_abs_diff",	"ionb_max_abs_diff", "ionb_abs_diff_Q1", "ionb_abs_diff_Q2", 
                             "ionb_abs_diff_Q3", "ionb_mean_abs_diff", "ionb_std_abs_diff", "iony_min_abs_diff", 
                             "iony_max_abs_diff", "iony_abs_diff_Q1", "iony_abs_diff_Q2", "iony_abs_diff_Q3", "iony_mean_abs_diff", 
-                            "iony_std_abs_diff", "dotprod", "dotprod_ionb", "dotprod_iony", "cos", "cos_ionb",	"cos_iony"]
+                            "iony_std_abs_diff", "dotprod", "dotprod_ionb", "dotprod_iony", "cos", "cos_ionb",	"cos_iony"],
+  "//comment": "modification for ms2pip e-g Carbamidomethyl,57.021464,opt,C",
+  "ms2pip_mod":["Oxidation,15.994915,opt,M"] 
   }
 }
 

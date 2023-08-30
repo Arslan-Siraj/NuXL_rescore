@@ -1,18 +1,14 @@
-import os
-import re
-import json
 import pandas as pd
 from pyopenms import *
 from argparser import args
-import matplotlib.pyplot as plt
-from plotting import plot_weights_perc, plot_comparison_PSMs, comparison_PSMs, plot_FDR_plot
+from plotting import plot_weights_perc, comparison_PSMs, plot_FDR_plot
 from FDR_calculation import FDR_filtering_perc, run_percolator, FDR_unique_PSMs
-from Data_parser import peptide_ids_to_dataframe, read_pin_file, read_features_config, extract_intensities, read_fasta, annotate_features
+from Data_parser import peptide_ids_to_dataframe, read_pin_file, read_fasta, annotate_features
 from entrapment import entrapment_calculations
+from pkg_resources import get_distribution
 
 def process():
-    print("-----Configuations-----")
-    print(args)
+
     print("==> idXML Loading")
     protein_ids = []
     peptide_ids = []
@@ -34,15 +30,16 @@ def process():
 
     if RT_predictions_feat_df is None:
         print("Warning RT_predictions not extracted, use -rt_model DeepLC option")
-        
-  
+
     MS2PIP_feat_df = None 
     if args.ms2pip:
         if args.ms2pip_path is not None:
             MS2PIP_feat_df =  pd.read_csv(args.ms2pip_path)
         else:
             from ms2pip_features import Take_MS2PIP_features
-            MS2PIP_feat_df = Take_MS2PIP_features()
+            MS2PIP_path = Take_MS2PIP_features()
+            MS2PIP_feat_df =  pd.read_csv(MS2PIP_path)
+            
         print("Successfully extracted MS2PIP_Feature :", MS2PIP_feat_df.shape)
     else:
         print("Warning MS2PIP features (intensities) are not included, use -ms2pip True")
@@ -54,6 +51,7 @@ def process():
         else:
             from ms2pip_features import Take_MS2PIP_rescore_features
             MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features() 
+
         print("Successfully extracted MS2PIP_rescore Features :", MS2PIP_rescore_feat_df.shape)     
     else:
         print("Warning MS2PIP rescore features are not included, use -ms2pip_rescore True")
@@ -77,19 +75,49 @@ def process():
     Feat_FDR_perc_file = FDR_filtering_perc(Feat_perc_result_file+'.idXML')
 
     if args.entrap == False:
-      comparison_PSMs(Feat_perc_result_file+ '_0.0100_XLs.idXML', perc_result_file+ '_0.0100_XLs.idXML')
-      XL_100_file = perc_result_file+'_1.0000_XLs.idXML'
-      XL_100_feat_file = Feat_perc_result_file+'_1.0000_XLs.idXML'
-      plot_FDR_plot(XL_100_file, XL_100_feat_file)
+        comparison_PSMs(Feat_perc_result_file+ '_0.0100_XLs.idXML', perc_result_file+ '_0.0100_XLs.idXML')
+        XL_100_file = perc_result_file+'_1.0000_XLs.idXML'
+        XL_100_feat_file = Feat_perc_result_file+'_1.0000_XLs.idXML'
+        plot_FDR_plot(XL_100_file, XL_100_feat_file)
         
     if args.entrap:
         actual_prot = read_fasta(args.actual_db)
         un_100_XL_file = FDR_unique_PSMs(perc_result_file+'.idXML')
         un_100_XL_feat_file = FDR_unique_PSMs(Feat_perc_result_file+'.idXML')
         entrapment_calculations(un_100_XL_file, un_100_XL_feat_file, actual_prot)
-    
+        
 
 
 if __name__ == "__main__":
-    process()
+
+    print("-----Configuation-----")
+    for attr, value in vars(args).items():
+        print(f"{attr}: {value}")
+
+    if args.ms2pip and args.ms2pip_rescore : 
+        print("Error! please select ms2rescore features or ms2pip intensity features or combine features like e-g RT+intensities or RT+ms2rescore")
+    
+    else :
+        if args.ms2pip and args.ms2pip_path is None:
+            ms2pip_curr_version = get_distribution("ms2pip").version
+            ms2pip_desire_version = "3.11.0"
+            print("ms2pip version: ", ms2pip_curr_version)
+            if ms2pip_curr_version != ms2pip_desire_version :
+                print("Error! ms2pip version ", ms2pip_desire_version , "required")
+                print("Hint pip install ms2pip==3.11.0")
+            else: 
+                process()
+        
+        elif args.ms2pip_rescore and args.ms2pip_rescore_path is None:
+            ms2pip_curr_version = get_distribution("ms2pip").version
+            ms2pip_desire_version = "4.0.0.dev1"
+            print("ms2pip version: ", ms2pip_curr_version)
+            if ms2pip_curr_version != ms2pip_desire_version :
+                print("Error! ms2pip version ", ms2pip_desire_version ,"required")
+                print("Hint pip install ms2pip --pre")
+            else:
+                process()
+
+        else:
+            process()
     
