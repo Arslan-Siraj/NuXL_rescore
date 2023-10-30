@@ -103,21 +103,31 @@ if __name__ == "__main__":
             ms2pip_desire_version = "3.11.0"
             print("ms2pip version: ", ms2pip_curr_version)
             if ms2pip_curr_version != ms2pip_desire_version :
-                print("Error! ms2pip version ", ms2pip_desire_version , "required")
-                print("Hint pip install ms2pip==3.11.0")
+                print("Error! ms2pip version ", ms2pip_desire_version , "required ", "For help, about dependencies see requirements.txt")
+                print("Try pip install ms2pip==3.11.0")
             else: 
                 process()
         
         elif args.ms2pip_rescore and args.ms2pip_rescore_path is None:
-            ms2pip_curr_version = get_distribution("ms2pip").version
-            ms2pip_desire_version = "4.0.0.dev1"
-            print("ms2pip version: ", ms2pip_curr_version)
-            if ms2pip_curr_version != ms2pip_desire_version :
-                print("Error! ms2pip version ", ms2pip_desire_version ,"required")
-                print("Hint pip install ms2pip --pre")
-            else:
-                process()
-
+            try:
+                ms2pip_curr_version = get_distribution("ms2pip").version
+                ms2rescore_curr_version = get_distribution("ms2rescore").version
+                ms2pip_desire_version = "4.0.0.dev1"
+                print("ms2pip version: ", ms2pip_curr_version)
+                print("ms2rescore version: ", ms2rescore_curr_version)
+                if int(ms2pip_curr_version[0]) != int(4):
+                    print("Error! ms2pip desire version 4.0.0.dev1, .., 4.0.0.dev5")
+                    print("For help, about dependencies see requirements.txt")
+                elif int(ms2rescore_curr_version[0]) < int(3):
+                    print("Error! ms2rescore desire version 3.0.b4")
+                    print("For help, about dependencies see requirements.txt")
+                else:
+                    process()
+            
+            except Exception as e:
+                print("An error occurred:", e)
+                print("For help, about dependencies see requirements.txt")
+              
         else:
             process()
     

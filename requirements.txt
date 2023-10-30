@@ -15,16 +15,25 @@ deeplc==1.2.1
 deeplcretrainer==0.1.13
 ms2pip==3.11.0
 #
-## MS2rescore from v3-refactoring branch
-#pip install git+https://github.com/compomics/ms2rescore.git@v3-refactoring
-#or
-#pip install ms2rescore --pre
+#MS2pip intensity features:
+#need ms2pip version 3.11.0
+#
+#Ms2rescore features:
+#need ms2pip version 4.0.0.dev1, .., 4.0.0.dev5 
+#pip install ms2pip==4.0.0.dev1
+#
+#need ms2rescore version 3.0.b4
+#
+#pip install ms2rescore --pre 
+#or 
+#pip install ms2rescore==3.0.b4
+#Note: first uninstall and then reinstall (if still poblem with version)
 #
 ## OpenMS
 ##############################
 #
 # build openms from source https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/install_linux.html
-# percolator adapter and executable will require should be on path 
+# percolator adapter and executable will require should be specified
 #
 
 
