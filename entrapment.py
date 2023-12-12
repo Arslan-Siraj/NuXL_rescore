@@ -72,10 +72,10 @@ def entrapment_calculations(idXML_f , idXML_feat_f, True_prot):
     plt.plot(idXML_df_filtered['q-value CSMs'], idXML_df_filtered['entrapment q-val'], color='red', label = 'no extra feat',linewidth=2.0)
     plt.plot(idXML_feat_df_filtered['q-value CSMs'], idXML_feat_df_filtered['entrapment q-val'], color='blue', label ='extra feat',linewidth=2.0)
     ax.plot([0,1],[0,1], color='green')
-    plt.title("XL FDR entrapment comparison")
+    plt.title("CSM FDR entrapment plot")
     #plt.axis([-0.1, 1.2, 0, 2500])
-    plt.xlabel("XL FDR q-value", fontsize=12)
-    plt.ylabel("False match rate (# of Entrapment CSMs / # of Total CSMs)", fontsize=12) 
+    plt.xlabel("CSM FDR q-value", fontsize=12)
+    plt.ylabel("False match rate (# of Entrapment CSMs / # of Target CSMs)", fontsize=12) 
     #plt.axvline(x = 0.01, color = 'green', linestyle='-')
     #plt.axvline(x = 0.01, color = 'green', linestyle='-')
     #ax.set_xlim(-0.0, 0.1)
@@ -86,7 +86,7 @@ def entrapment_calculations(idXML_f , idXML_feat_f, True_prot):
     #plt.ylim(0.0, 1.0)
     #ax.set_xscale('log')
     plt.legend()
-    plt.savefig(outfile_path[0] + "_XL_FDR_entrapment_log_1.0.pdf") 
+    plt.savefig(outfile_path[0] + "_CSM_FDR_entrapment_log_1.0.pdf") 
     #plt.show()
 
     
