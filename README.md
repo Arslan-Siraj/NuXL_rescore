@@ -1,7 +1,10 @@
 # NuXL_rescore
 
 This repository created for percolator base rescoring investigations of protein-nucleic acid crosslinking protocols
-with the addition of retention time prediction features from fine-tuned deepLC models and predictions of MSPIP base peak intensity features.
+with the addition of retention time prediction features from fine-tuned deepLC models and predictions of MS2PIP base peak intensity features.<br />
+Siraj, A., Bouwmeester, R., Declercq, A., Welp, L., Chernev, A., Wulf, A., ... & Sachsenberg, T. (2024). Intensity and retention time prediction improves the rescoring of protein‐nucleic acid cross‐links. Proteomics, 24(8), 2300144.
+[https://doi.org/10.1002/pmic.202300144](https://doi.org/10.1002/pmic.202300144)
+
 
 ---
 
