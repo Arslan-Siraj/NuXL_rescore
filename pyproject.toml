@@ -6,6 +6,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
     { name = "Arslan Siraj", email = "arslan.siraj@uni-tuebingen.de" },
+    { name = "Arslan Siraj" },
     { name = "Timo Sachsenberg" },
 ]
 classifiers = [
@@ -41,7 +42,7 @@ dependencies = [
 ]
 
 [project.scripts]
-nuxl_rescore = "run.__main__:main"
+nuxl_rescore = "nuxk_rescore.run:main"
 
 [project.urls]
 GitHub = "https://github.com/Arslan-Siraj/NuXL_rescore/"

@@ -1,2 +1,8 @@
-__pycache__
+*.pyc
+__pycache__/
+*.pkl
+dist/
+build/
 .ipynb_checkpoints
+nuxl_rescore.egg-info/
+.venv-test/

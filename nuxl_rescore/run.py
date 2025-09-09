@@ -89,7 +89,7 @@ def process():
         
 
 
-if __name__ == "__main__":
+def main():
 
     print("-----Configuation-----")
     for attr, value in vars(args).items():
