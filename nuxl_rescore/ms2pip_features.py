@@ -4,9 +4,10 @@ from psm_utils.io import peptide_record
 from psm_utils.io import write_file
 from tqdm import tqdm
 import pandas as pd
-from argparser import args
 from psm_utils.io import convert
-from Data_parser import read_pin_file, read_features_config
+
+from .argparser import args
+from .Data_parser import read_pin_file, read_features_config
 
 CONFIG = {  'ms2rescore': 
             {   'tmp_path': '', 

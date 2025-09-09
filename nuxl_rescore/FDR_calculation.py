@@ -2,7 +2,7 @@ import os
 import sys
 import pandas as pd
 from pyopenms import *
-from argparser import args
+from .argparser import args
 
 def FDR_filtering_perc(perc_result_path: str):
     """

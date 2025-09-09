@@ -1,11 +1,12 @@
 import pandas as pd
 from pyopenms import *
-from argparser import args
-from plotting import plot_weights_perc, comparison_PSMs, plot_FDR_plot
-from FDR_calculation import FDR_filtering_perc, run_percolator, FDR_unique_PSMs
-from Data_parser import peptide_ids_to_dataframe, read_pin_file, read_fasta, annotate_features
-from entrapment import entrapment_calculations
 from pkg_resources import get_distribution
+
+from .argparser import args
+from .plotting import plot_weights_perc, comparison_PSMs, plot_FDR_plot
+from .FDR_calculation import FDR_filtering_perc, run_percolator, FDR_unique_PSMs
+from .Data_parser import peptide_ids_to_dataframe, read_pin_file, read_fasta, annotate_features
+from .entrapment import entrapment_calculations
 
 def process():
 
@@ -130,4 +131,6 @@ if __name__ == "__main__":
               
         else:
             process()
+
+            
     

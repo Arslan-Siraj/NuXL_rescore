@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pyopenms import *
-from argparser import args
 import statsmodels.api as sm
 from sklearn.metrics import mean_absolute_error
+from .argparser import args
 
 
 def get_extra_feat(keys, values, extra_feat_ls):

@@ -1,8 +1,10 @@
 import os
 import pandas as pd
-from argparser import args
 from deeplc.feat_extractor import FeatExtractor
 from deeplc import DeepLC
+
+from .argparser import args
+
   
 def predict_from_DeepLC(peptides: pd.DataFrame, calibration: pd.DataFrame = None) -> list:
     """

@@ -1,4 +1,4 @@
-from idXML2df import readAndProcessIdXML
+from .idXML2df import readAndProcessIdXML
 from pyopenms import *
 import matplotlib.pyplot as plt
 
