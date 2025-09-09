@@ -42,7 +42,7 @@ dependencies = [
 ]
 
 [project.scripts]
-nuxl_rescore = "nuxk_rescore.run:main"
+nuxl_rescore = "nuxl_rescore.run:main"
 
 [project.urls]
 GitHub = "https://github.com/Arslan-Siraj/NuXL_rescore/"
@@ -56,3 +56,10 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["nuxl_rescore"]
 include-package-data = true
+
+[tool.setuptools.package-data]
+nuxl_rescore = [
+  "calibration_data/**",
+  "RT_deeplc_model/**",
+  "unimod/**",
+]
