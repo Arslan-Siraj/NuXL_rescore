@@ -41,12 +41,12 @@ dependencies = [
 ]
 
 [project.scripts]
-nuxl_rescore = "nuxl_rescore.__main__:main"
+nuxl_rescore = "run.__main__:main"
 
 [project.urls]
-GitHub = "https://github.com/compomics/deeplc"
-PyPi = "https://pypi.org/project/deeplc/"
-CompOmics = "https://www.compomics.com"
+GitHub = "https://github.com/Arslan-Siraj/NuXL_rescore/"
+PyPi = "https://pypi.org/project/nuxl_rescore/"
+OpenMS = "https://openms.de/"
 
 [build-system]
 requires = ["setuptools"]
