@@ -2,7 +2,7 @@ import pandas as pd
 import json
 import re
 import math
-from argparser import args
+from .argparser import args
 from Bio import SeqIO
 import numpy as np
 from scipy.stats import pearsonr

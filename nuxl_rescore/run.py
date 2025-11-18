@@ -7,6 +7,8 @@ from .plotting import plot_weights_perc, comparison_PSMs, plot_FDR_plot
 from .FDR_calculation import FDR_filtering_perc, run_percolator, FDR_unique_PSMs
 from .Data_parser import peptide_ids_to_dataframe, read_pin_file, read_fasta, annotate_features
 from .entrapment import entrapment_calculations
+from .RT_features import predict_from_DeepLC, calculate_RTfeatures
+from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 
 def process():
 
@@ -21,7 +23,6 @@ def process():
         RT_id_cols = peptide_ids_to_dataframe(peptide_ids)
         
         if args.rt_model == "DeepLC":
-            from RT_features import predict_from_DeepLC, calculate_RTfeatures
             print("-->>> selected RT model DeepLC") 
             calibration_data = pd.read_csv(args.calibration)
             RT_predictions = predict_from_DeepLC(RT_id_cols, calibration_data)
@@ -37,7 +38,6 @@ def process():
         if args.ms2pip_path is not None:
             MS2PIP_feat_df =  pd.read_csv(args.ms2pip_path)
         else:
-            from ms2pip_features import Take_MS2PIP_features
             MS2PIP_path = Take_MS2PIP_features()
             MS2PIP_feat_df =  pd.read_csv(MS2PIP_path)
             
@@ -50,7 +50,6 @@ def process():
         if args.ms2pip_rescore_path is not None:
             MS2PIP_rescore_feat_df = read_pin_file(args.ms2pip_rescore_path)
         else:
-            from ms2pip_features import Take_MS2PIP_rescore_features
             MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features() 
 
         print("Successfully extracted MS2PIP_rescore Features :", MS2PIP_rescore_feat_df.shape)     
@@ -65,7 +64,6 @@ def process():
     Feat_idXML_out_path = args.out+"updated_"+out_file_[len(out_file_)-1]
     IdXMLFile().store(Feat_idXML_out_path, prot_ids, pep_ids)
     print("==>extra featured idXML stored at: ", Feat_idXML_out_path) 
-
     
     perc_result_file = run_percolator(args.id, args.perc_exec , args.perc_adapter)
     FDR_perc_file = FDR_filtering_perc(perc_result_file+'.idXML')
