@@ -5,7 +5,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     '-id', 
     type=str, 
-    required=True,
+    required=False,
     help="Input file (idXML format) path: where search for .preperc file if MS2PIP feature active",
     metavar='id'
     )

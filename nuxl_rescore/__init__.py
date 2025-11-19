@@ -4,4 +4,9 @@
 #from .entrapment import *
 #from .idXML2df import *
 #from .RT_features import *
-from .run import main as run  # alias main as run
+#from .run import main as run  # alias main as run
+#from .run import process as process  # alias process as process
+
+from .run import main, process
+
+__all__ = ["main", "process"]

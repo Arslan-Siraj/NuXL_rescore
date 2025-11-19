@@ -10,7 +10,38 @@ from .entrapment import entrapment_calculations
 from .RT_features import predict_from_DeepLC, calculate_RTfeatures
 from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 
-def process():
+def process(id=None, calibration=None, unimod=None, feat_config=None,
+            model_path=None, ms2pip=None, ms2pip_path=None,
+            ms2pip_rescore=None, ms2pip_rescore_path=None,
+            rt_model=None, entrap=None, actual_db=None, out=None):
+
+    # If arguments are provided explicitly, override CLI parser
+    if id is not None:
+        args.id = id
+    if calibration is not None:
+        args.calibration = calibration
+    if unimod is not None:
+        args.unimod = unimod
+    if feat_config is not None:
+        args.feat_config = feat_config
+    if model_path is not None:
+        args.model_path = model_path
+    if ms2pip is not None:
+        args.ms2pip = ms2pip
+    if ms2pip_path is not None:
+        args.ms2pip_path = ms2pip_path
+    if ms2pip_rescore is not None:
+        args.ms2pip_rescore = ms2pip_rescore
+    if ms2pip_rescore_path is not None:
+        args.ms2pip_rescore_path = ms2pip_rescore_path
+    if rt_model is not None:
+        args.rt_model = rt_model
+    if entrap is not None:
+        args.entrap = entrap
+    if actual_db is not None:
+        args.actual_db = actual_db
+    if out is not None:
+        args.out = out
 
     print("==> idXML Loading")
     protein_ids = []
