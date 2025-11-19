@@ -10,7 +10,7 @@ from .entrapment import entrapment_calculations
 from .RT_features import predict_from_DeepLC, calculate_RTfeatures
 from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 
-def process(id=None, calibration=None, unimod=None, feat_config=None,
+def run_pipeline(id=None, calibration=None, unimod=None, feat_config=None,
             model_path=None, ms2pip=None, ms2pip_path=None,
             ms2pip_rescore=None, ms2pip_rescore_path=None,
             rt_model=None, entrap=None, actual_db=None, out=None):
@@ -136,7 +136,7 @@ def main():
                 print("Error! ms2pip version ", ms2pip_desire_version , "required ", "For help, about dependencies see requirements.txt")
                 print("Try pip install ms2pip==3.11.0")
             else: 
-                process()
+                run_pipeline()
         
         elif args.ms2pip_rescore and args.ms2pip_rescore_path is None:
             try:
@@ -152,14 +152,14 @@ def main():
                     print("Error! ms2rescore desire version 3.0.b4")
                     print("For help, about dependencies see requirements.txt")
                 else:
-                    process()
+                    run_pipeline()
             
             except Exception as e:
                 print("An error occurred:", e)
                 print("For help, about dependencies see requirements.txt")
               
         else:
-            process()
+            run_pipeline()
 
             
     
