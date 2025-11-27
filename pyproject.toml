@@ -1,6 +1,6 @@
 [project]
 name = "nuxl_rescore"
-version = "0.0.1"
+version = "0.1.0"
 description = "NuXL_rescore: rescoring pipeline for protein‐nucleic acid cross‐links."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -47,9 +47,9 @@ dependencies = [
     "scipy>=1.10,<1.14",
     "scikit-learn>=1.2.0",
     "tqdm>=4.66,<5",
-    "statsmodels>=0.14,<0.15",
+    "statsmodels>=0.14,<0.16",        # updated for pandas 2.x support
     "matplotlib>=3.7,<3.9",
-    "pyopenms>=2.7,<3.2",
+    "pyopenms>=2.7,<=3.2.0",          # updated to allow pyopenms 3.2.0
     "deeplcretrainer==0.1.17",
     "ms2pip>=3.11,<3.12",
     "psm_utils>=0.2.3",

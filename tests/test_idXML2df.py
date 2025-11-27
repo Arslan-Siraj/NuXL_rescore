@@ -10,7 +10,7 @@ def test_read_idxml_github(tmp_path):
     # Download the file into tmp_path
     local_file = tmp_path / "Example_perc_0.0100_XLs.idXML"
     r = requests.get(url)
-    r.raise_for_status()  # raise error if download fails
+    r.raise_for_status() 
     local_file.write_bytes(r.content)
 
     # Now use your function
