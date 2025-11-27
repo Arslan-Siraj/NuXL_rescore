@@ -104,12 +104,12 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     # -----------------------------
     # PERCOLATOR
     # -----------------------------
-    perc_result_file = run_percolator(_id, _perc_exec, _perc_adapter)
+    perc_result_file = run_percolator(_id, _perc_exec, _perc_adapter, _out)
     FDR_perc_file = FDR_filtering_perc(perc_result_file + '.idXML')
 
     print("==> Percolator and FDR with extra features")
     Feat_perc_result_file = run_percolator(
-        Feat_idXML_out_path, _perc_exec, _perc_adapter
+        Feat_idXML_out_path, _perc_exec, _perc_adapter, _out
     )
 
     plot_weights_perc(Feat_perc_result_file + '.weights', extra_feat_names)

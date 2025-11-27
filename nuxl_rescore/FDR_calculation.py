@@ -156,7 +156,7 @@ def FDR_unique_PSMs(perc_result_path: str):
     return  outfile_path[0] + "_unique_1.0000_XLs.idXML"
 
     
-def run_percolator(infile: str, perc_path: str, percadapter_path: str):
+def run_percolator(infile: str, perc_path: str, percadapter_path: str, out_dir: str):
     """
     Perform rescoring with Percolator
     Args:
@@ -170,8 +170,7 @@ def run_percolator(infile: str, perc_path: str, percadapter_path: str):
     
     file_out_name = infile.split(".")
     file_ = file_out_name[0].split('/')
-    write_out  = args.out + file_[len(file_)-1]
-    
+    write_out  = out_dir + file_[len(file_)-1]
     
     # Define the command for the PercolatorAdapter run
     percadapter_command = percadapter_path + " -in " + infile + " -out " +write_out+"_perc.idXML " + \
