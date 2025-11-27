@@ -94,8 +94,8 @@ def run_from_CLI(args):
     for attr, value in vars(args).items():
         print(f"{attr}: {value}")
    
-    run_pipeline(_id=args.id, _calibration=args.calibration, _unimod=args.unimod, _feat_config=args.feat_config,
+    run_pipeline(_id=args.id, _calibration=args.calibration, _unimod=args.unimod, _feat_config=args.feat_config, _feat_out=args.feat_out,
     _model_path=args.model_path, _ms2pip=args.ms2pip, _ms2pip_path=args.ms2pip_path,
     _ms2pip_rescore=args.ms2pip_rescore, _ms2pip_rescore_path=args.ms2pip_rescore_path,
-    _rt_model=args.rt_model, _entrap=args.entrap, _actual_db=args.actual_db, _out=args.out
- )
+    _rt_model=args.rt_model, _entrap=args.entrap, _actual_db=args.actual_db, _out=args.out, _peprec_file=args.peprec, _mgf_file=args.mgf
+    )
