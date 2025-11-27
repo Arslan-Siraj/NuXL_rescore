@@ -109,7 +109,7 @@ def comparison_PSMs(feat_perc_idXML : str, perc_idXML: str):
      f.write('\n')
      f.write("1% XL FDR with extra features: " + str(len(XL_01_feat)))
     
-def evaluate_linear_regression_plot_(df:pd.DataFrame, x="rt_norm", y="rt_pred", name="evaluate_regression"):
+def evaluate_linear_regression_plot_(df:pd.DataFrame, x="rt_norm", y="rt_pred", name="evaluate_regression", output_dir: str = None):
     """
     calculate regression evaluation parameters
     """
@@ -140,7 +140,7 @@ def evaluate_linear_regression_plot_(df:pd.DataFrame, x="rt_norm", y="rt_pred", 
     plt.xlabel("Observed retention time ")
     plt.ylabel("Predicted retention time ") 
     #plt.ylim([1, 10])
-    plt.savefig(args.out + name+".pdf")
+    plt.savefig(output_dir + name+".pdf")
 
     return pd.DataFrame(
         dict(
@@ -171,7 +171,7 @@ def plot_RT_predictions(idXML_file:str,name = 'RT_results'):
     evaluate_linear_regression_plot_(RT_df, x='Observed_RT', y='Predicted_RT', name = name)
     
 
-def plot_RT_predictions_comparison(idXML_XL_file:str, idXML_pep_file:str, name = 'RT_comparison'):
+def plot_RT_predictions_comparison(idXML_XL_file:str, idXML_pep_file:str, name = 'RT_comparison', output_dir: str = None):
     """
       retention time comparison plot of XL (idXML:XL_file) and nonXL file (idXML_pep_file).
     """
@@ -210,7 +210,7 @@ def plot_RT_predictions_comparison(idXML_XL_file:str, idXML_pep_file:str, name =
     #plt.ylim([1, 10])
     plt.legend()
     #plt.show()
-    plt.savefig(args.out + name+".pdf")
+    plt.savefig(output_dir + name+".pdf")
 
 def plot_FDR_plot(idXML_id, idXML_extra):
     """
