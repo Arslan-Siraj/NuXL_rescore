@@ -13,7 +13,7 @@ from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _feat_out=True,
     _model_path=None, _ms2pip=None, _ms2pip_path=None,
     _ms2pip_rescore=None, _ms2pip_rescore_path=None,
-    _rt_model=None, _entrap=None, _actual_db=None, _out=None
+    _rt_model=None, _entrap=None, _actual_db=None, _out=None, peprec_file=None, mgf_file=None
 ):
     """
     explicit function arguments when called as Python API.
@@ -57,7 +57,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _ms2pip_path is not None:
             MS2PIP_feat_df = pd.read_csv(_ms2pip_path)
         else:
-            MS2PIP_path = Take_MS2PIP_features()
+            MS2PIP_path = Take_MS2PIP_features(id_file=_id, peprec_file=_peprec_path, mgf_file=_mgf_path, out_dir=_out, feat_config_path=_feat_config)
             MS2PIP_feat_df = pd.read_csv(MS2PIP_path)
 
         print("Successfully extracted MS2PIP_Features:", MS2PIP_feat_df.shape)
@@ -74,7 +74,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _ms2pip_rescore_path is not None:
             MS2PIP_rescore_feat_df = read_pin_file(_ms2pip_rescore_path)
         else:
-            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features()
+            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features(id_file=_id, peprec_file=_peprec_path, mgf_file=_mgf_path, out_dir=_out)
 
         print("Successfully extracted MS2PIP_rescore Features:",
               MS2PIP_rescore_feat_df.shape)

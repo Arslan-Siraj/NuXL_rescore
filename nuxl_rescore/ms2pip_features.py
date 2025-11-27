@@ -90,14 +90,14 @@ def unique(list1):
             unique_list.append(x)
     return unique_list
 
-def Take_ms2pip_features(psm_list, out_file):
+def Take_ms2pip_features(psm_list, out_file, feat_config_path, out_dir):
     """
     Extract MSPIP features (DataFrame of intensities), will furthur extract intensity from output file
     """       
     print("update  CONFIG for MS2PIP feature-----")
     #"ptm": config_up._get_modification_config(psm_list),
     from ms2pip.ms2pipC import MS2PIP
-    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(args.feat_config)
+    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(feat_config_path)
 
     CONFIG["ms2pip"].update(
     {
@@ -176,55 +176,54 @@ def Take_ms2pip_features(psm_list, out_file):
     final_psms_df = pd.concat(final_PSMs, join="inner")
     file_name_ = out_file.split('/')
     file_name = file_name_[len(file_name_)-1]
-    final_psms_df.to_csv(args.out + file_name+"_MSPIP.csv")
-    print("MSPIP features written at: ",args.out + file_name+"_MSPIP.csv")    
-    return args.out + file_name+"_MSPIP.csv"
+    final_psms_df.to_csv(out_dir + file_name+"_MSPIP.csv")
+    print("MSPIP features written at: ",out_dir + file_name+"_MSPIP.csv")    
+    return out_dir + file_name+"_MSPIP.csv"
 
-def Take_MS2PIP_features():
+def Take_MS2PIP_features(id_file: str, peprec_file: str, mgf_file: str, out_dir: str, feat_config_path: str):
     """
     Extract MSPIP features (DataFrame of intensities)
     Extract MSPIP rescore features (.pin file)
     """
-    file_id = (args.id).split('.')
+    file_id = (id_file).split('.')
     file_id_ = file_id[0].split('/')
   
-    out_pin_file = args.out + file_id_[len(file_id_)-1] +'.pin'
-    if args.peprec is None:
+    out_pin_file = out_dir + file_id_[len(file_id_)-1] +'.pin'
+    if peprec_file is None:
         print("converting .idXML to .peprec format")
-        peprec_file = args.out + file_id_[len(file_id_)-1] + '.peprec'
-        convert(args.id, peprec_file)
+        peprec_file = out_dir + file_id_[len(file_id_)-1] + '.peprec'
+        convert(id_file, peprec_file)
         print(".peprec written at: ", peprec_file)
-        args.peprec = peprec_file
+        peprec_file = peprec_file
 
     ms2pip_features_out = None
-    if args.mgf is not None:
-        CONFIG = initilize_CONFIG(args.mgf, out_pin_file , args.peprec)
+    if mgf_file is not None:
+        CONFIG = initilize_CONFIG(mgf_file, out_pin_file , peprec_file)
         print("Initialized MS2PIP CONFIG----\n", CONFIG)
         psm_list = get_psm_list(CONFIG["ms2rescore"]["psm_file"])
-        ms2pip_features_out = Take_ms2pip_features(psm_list, file_id[0])
-    else:
+        ms2pip_features_out = Take_ms2pip_features(psm_list, file_id[0], feat_config_path, out_dir) 
         print("Error: unable_initialized please provide (.mgf) file")
 
     return ms2pip_features_out
 
-def Take_MS2PIP_rescore_features():
+def Take_MS2PIP_rescore_features(id_file: str, peprec_file: str, mgf_file: str, out_dir: str):
     """
     Extract MSPIP features (DataFrame of intensities)
     Extract MSPIP rescore features (.pin file)
     """
-    file_id = (args.id).split('.')
+    file_id = (id_file).split('.')
     file_id_ = file_id[0].split('/')
-    out_pin_file = args.out + file_id_[len(file_id_)-1] +'.pin'
-    if args.peprec is None:
+    out_pin_file = out_dir + file_id_[len(file_id_)-1] +'.pin'
+    if peprec_file is None:
         print("converting .idXML to .peprec format")
-        peprec_file = args.out + file_id_[len(file_id_)-1] + '.peprec'
-        convert(args.id, peprec_file)
+        peprec_file = out_dir + file_id_[len(file_id_)-1] + '.peprec'
+        convert(id_file, peprec_file)
         print(".peprec written at: ", peprec_file)
-        args.peprec = peprec_file
+        peprec_file = peprec_file
         
     ms2pip_rescore_feat = None 
-    if args.mgf is not None:
-        CONFIG = initilize_CONFIG(args.mgf, out_pin_file , args.peprec)
+    if mgf_file is not None:
+        CONFIG = initilize_CONFIG(mgf_file, out_pin_file , peprec_file)
         print("Initialized MS2PIP CONFIG----\n", CONFIG)
         psm_list = get_psm_list(CONFIG["ms2rescore"]["psm_file"])
         psm_list["rescoring_features"] =  [{} for _ in range(len(psm_list))] 
