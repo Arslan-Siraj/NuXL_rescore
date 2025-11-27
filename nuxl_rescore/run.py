@@ -2,7 +2,7 @@ import pandas as pd
 from pyopenms import *
 from pkg_resources import get_distribution
 
-from .argparser import args
+from .argparser import build_parser
 from .plotting import plot_weights_perc, comparison_PSMs, plot_FDR_plot
 from .FDR_calculation import FDR_filtering_perc, run_percolator, FDR_unique_PSMs
 from .Data_parser import peptide_ids_to_dataframe, read_pin_file, read_fasta, annotate_features
@@ -10,115 +10,133 @@ from .entrapment import entrapment_calculations
 from .RT_features import predict_from_DeepLC, calculate_RTfeatures
 from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 
-def run_pipeline(id=None, calibration=None, unimod=None, feat_config=None,
-            model_path=None, ms2pip=None, ms2pip_path=None,
-            ms2pip_rescore=None, ms2pip_rescore_path=None,
-            rt_model=None, entrap=None, actual_db=None, out=None):
-
-    # If arguments are provided explicitly, override CLI parser
-    if id is not None:
-        args.id = id
-    if calibration is not None:
-        args.calibration = calibration
-    if unimod is not None:
-        args.unimod = unimod
-    if feat_config is not None:
-        args.feat_config = feat_config
-    if model_path is not None:
-        args.model_path = model_path
-    if ms2pip is not None:
-        args.ms2pip = ms2pip
-    if ms2pip_path is not None:
-        args.ms2pip_path = ms2pip_path
-    if ms2pip_rescore is not None:
-        args.ms2pip_rescore = ms2pip_rescore
-    if ms2pip_rescore_path is not None:
-        args.ms2pip_rescore_path = ms2pip_rescore_path
-    if rt_model is not None:
-        args.rt_model = rt_model
-    if entrap is not None:
-        args.entrap = entrap
-    if actual_db is not None:
-        args.actual_db = actual_db
-    if out is not None:
-        args.out = out
-
+def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None,
+    _model_path=None, _ms2pip=None, _ms2pip_path=None,
+    _ms2pip_rescore=None, _ms2pip_rescore_path=None,
+    _rt_model=None, _entrap=None, _actual_db=None, _out=None
+):
+    """
+    explicit function arguments when called as Python API.
+    """
     print("==> idXML Loading")
     protein_ids = []
     peptide_ids = []
-    IdXMLFile().load(args.id, protein_ids, peptide_ids) 
+    IdXMLFile().load(_id, protein_ids, peptide_ids)
 
+    # -----------------------------
+    # RT FEATURES
+    # -----------------------------
     RT_predictions_feat_df = None
-    if args.rt_model is not None:
+
+    if _rt_model is not None:
         print("==> RT columns extracting")
+
         RT_id_cols = peptide_ids_to_dataframe(peptide_ids)
-        
-        if args.rt_model == "DeepLC":
-            print("-->>> selected RT model DeepLC") 
-            calibration_data = pd.read_csv(args.calibration)
+
+        if _rt_model == "DeepLC":
+            print("-->>> selected RT model: DeepLC")
+
+            calibration_data = pd.read_csv(_calibration)
+
             RT_predictions = predict_from_DeepLC(RT_id_cols, calibration_data)
             RT_predictions_feat_df = calculate_RTfeatures(RT_predictions)
-            print("Successfully extracted RT_features: ", RT_predictions_feat_df.shape)
-            RT_predictions_feat_df.to_csv(args.out+"RT_features.csv")
+
+            print("Successfully extracted RT_features:", RT_predictions_feat_df.shape)
+            RT_features_path = f"{_out}/RT_features.csv"
+            RT_predictions_feat_df.to_csv(RT_features_path)
 
     if RT_predictions_feat_df is None:
-        print("Warning RT_predictions not extracted, use -rt_model DeepLC option")
+        print("Warning: RT predictions not extracted. Use -rt_model DeepLC")
 
-    MS2PIP_feat_df = None 
-    if args.ms2pip:
-        if args.ms2pip_path is not None:
-            MS2PIP_feat_df =  pd.read_csv(args.ms2pip_path)
+    # -----------------------------
+    # MS2PIP INTENSITY FEATURES
+    # -----------------------------
+    MS2PIP_feat_df = None
+
+    if _ms2pip:
+        if _ms2pip_path is not None:
+            MS2PIP_feat_df = pd.read_csv(_ms2pip_path)
         else:
             MS2PIP_path = Take_MS2PIP_features()
-            MS2PIP_feat_df =  pd.read_csv(MS2PIP_path)
-            
-        print("Successfully extracted MS2PIP_Feature :", MS2PIP_feat_df.shape)
-    else:
-        print("Warning MS2PIP features (intensities) are not included, use -ms2pip True")
+            MS2PIP_feat_df = pd.read_csv(MS2PIP_path)
 
+        print("Successfully extracted MS2PIP_Features:", MS2PIP_feat_df.shape)
+
+    else:
+        print("Warning: MS2PIP intensity features disabled.")
+
+    # -----------------------------
+    # MS2RESCORE FEATURES
+    # -----------------------------
     MS2PIP_rescore_feat_df = None
-    if args.ms2pip_rescore:
-        if args.ms2pip_rescore_path is not None:
-            MS2PIP_rescore_feat_df = read_pin_file(args.ms2pip_rescore_path)
+
+    if _ms2pip_rescore:
+        if _ms2pip_rescore_path is not None:
+            MS2PIP_rescore_feat_df = read_pin_file(_ms2pip_rescore_path)
         else:
-            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features() 
+            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features()
 
-        print("Successfully extracted MS2PIP_rescore Features :", MS2PIP_rescore_feat_df.shape)     
+        print("Successfully extracted MS2PIP_rescore Features:",
+              MS2PIP_rescore_feat_df.shape)
+
     else:
-        print("Warning MS2PIP rescore features are not included, use -ms2pip_rescore True")
-    
+        print("Warning: MS2PIP_rescore features disabled.")
 
+    # -----------------------------
+    # ANNOTATE FEATURES & STORE NEW idXML
+    # -----------------------------
     print("==> writing features in idXML file")
-    prot_ids, pep_ids, extra_feat_names = annotate_features(protein_ids, peptide_ids, RT_predictions_feat_df, MS2PIP_feat_df, MS2PIP_rescore_feat_df)
 
-    out_file_ = (args.id).split("/")
-    Feat_idXML_out_path = args.out+"updated_"+out_file_[len(out_file_)-1]
+    prot_ids, pep_ids, extra_feat_names = annotate_features(
+        protein_ids, peptide_ids,
+        RT_predictions_feat_df,
+        MS2PIP_feat_df,
+        MS2PIP_rescore_feat_df
+    )
+
+    out_file = _id.split("/")[-1]
+    Feat_idXML_out_path = f"{_out}/updated_{out_file}"
+
     IdXMLFile().store(Feat_idXML_out_path, prot_ids, pep_ids)
-    print("==>extra featured idXML stored at: ", Feat_idXML_out_path) 
-    
-    perc_result_file = run_percolator(args.id, args.perc_exec , args.perc_adapter)
-    FDR_perc_file = FDR_filtering_perc(perc_result_file+'.idXML')
-    
-    print("==>Percolator and FDR calculations with extra features")
-    Feat_perc_result_file = run_percolator(Feat_idXML_out_path, args.perc_exec , args.perc_adapter)
-    plot_weights_perc(Feat_perc_result_file+'.weights', extra_feat_names)
-    Feat_FDR_perc_file = FDR_filtering_perc(Feat_perc_result_file+'.idXML')
+    print("==> Updated idXML stored at:", Feat_idXML_out_path)
 
-    if args.entrap == False:
-        comparison_PSMs(Feat_perc_result_file+ '_0.0100_XLs.idXML', perc_result_file+ '_0.0100_XLs.idXML')
-        XL_100_file = perc_result_file+'_1.0000_XLs.idXML'
-        XL_100_feat_file = Feat_perc_result_file+'_1.0000_XLs.idXML'
-        plot_FDR_plot(XL_100_file, XL_100_feat_file)
+    # -----------------------------
+    # PERCOLATOR
+    # -----------------------------
+    perc_result_file = run_percolator(_id, _perc_exec, _perc_adapter)
+    FDR_perc_file = FDR_filtering_perc(perc_result_file + '.idXML')
+
+    print("==> Percolator and FDR with extra features")
+    Feat_perc_result_file = run_percolator(
+        Feat_idXML_out_path, _perc_exec, _perc_adapter
+    )
+
+    plot_weights_perc(Feat_perc_result_file + '.weights', extra_feat_names)
+    Feat_FDR_perc_file = FDR_filtering_perc(Feat_perc_result_file + '.idXML')
+
+    # -----------------------------
+    # ENTRAPMENT OR COMPARISON
+    # -----------------------------
+    if not _entrap:
+        comparison_PSMs(
+            Feat_perc_result_file + '_0.0100_XLs.idXML',
+            perc_result_file + '_0.0100_XLs.idXML'
+        )
+
+        XL_all = perc_result_file + '_1.0000_XLs.idXML'
+        XL_feat_all = Feat_perc_result_file + '_1.0000_XLs.idXML'
+
+        plot_FDR_plot(XL_all, XL_feat_all)
+
+    else:
+        actual = read_fasta(_actual_db)
+        unq = FDR_unique_PSMs(perc_result_file + '.idXML')
+        unq_feat = FDR_unique_PSMs(Feat_perc_result_file + '.idXML')
+        entrapment_calculations(unq, unq_feat, actual)
         
-    if args.entrap:
-        actual_prot = read_fasta(args.actual_db)
-        un_100_XL_file = FDR_unique_PSMs(perc_result_file+'.idXML')
-        un_100_XL_feat_file = FDR_unique_PSMs(Feat_perc_result_file+'.idXML')
-        entrapment_calculations(un_100_XL_file, un_100_XL_feat_file, actual_prot)
-        
 
 
-def main():
+'''def main():
 
     print("-----Configuation-----")
     for attr, value in vars(args).items():
@@ -162,4 +180,4 @@ def main():
             run_pipeline()
 
             
-    
+    '''

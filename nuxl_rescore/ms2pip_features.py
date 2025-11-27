@@ -6,7 +6,6 @@ from tqdm import tqdm
 import pandas as pd
 from psm_utils.io import convert
 
-from .argparser import args
 from .Data_parser import read_pin_file, read_features_config
 
 CONFIG = {  'ms2rescore': 
