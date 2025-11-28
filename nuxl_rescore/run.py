@@ -2,7 +2,6 @@ import pandas as pd
 from pyopenms import *
 from pkg_resources import get_distribution
 
-from .argparser import build_parser
 from .plotting import plot_weights_perc, comparison_PSMs, plot_FDR_plot
 from .FDR_calculation import FDR_filtering_perc, run_percolator, FDR_unique_PSMs
 from .Data_parser import peptide_ids_to_dataframe, read_pin_file, read_fasta, annotate_features
@@ -13,11 +12,34 @@ from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _feat_out=True,
     _model_path=None, _ms2pip=None, _ms2pip_path=None,
     _ms2pip_rescore=None, _ms2pip_rescore_path=None,
-    _rt_model=None, _entrap=None, _actual_db=None, _out=None, peprec_file=None, mgf_file=None
+    _rt_model=None, _entrap=None, _actual_db=None, _out=None, _preprec_path=None, _mgf_path=None
 ):
     """
     explicit function arguments when called as Python API.
     """
+
+    print(
+    f"""
+    Configuration:
+    _id: {_id}
+    _calibration: {_calibration}
+    _unimod: {_unimod}
+    _feat_config: {_feat_config}
+    _feat_out: {_feat_out}
+    _model_path: {_model_path}
+    _ms2pip: {_ms2pip}
+    _ms2pip_path: {_ms2pip_path}
+    _ms2pip_rescore: {_ms2pip_rescore}
+    _ms2pip_rescore_path: {_ms2pip_rescore_path}
+    _rt_model: {_rt_model}
+    _entrap: {_entrap}
+    _actual_db: {_actual_db}
+    _out: {_out}
+    _preprec_path: {_preprec_path}
+    _mgf_path: {_mgf_path}
+        """
+    )
+
     print("==> idXML Loading")
     protein_ids = []
     peptide_ids = []
@@ -57,7 +79,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _ms2pip_path is not None:
             MS2PIP_feat_df = pd.read_csv(_ms2pip_path)
         else:
-            MS2PIP_path = Take_MS2PIP_features(id_file=_id, peprec_file=_peprec_path, mgf_file=_mgf_path, out_dir=_out, feat_config_path=_feat_config)
+            MS2PIP_path = Take_MS2PIP_features(id_file=_id, peprec_file=_preprec_path, mgf_file=_mgf_path, out_dir=_out, feat_config_path=_feat_config)
             MS2PIP_feat_df = pd.read_csv(MS2PIP_path)
 
         print("Successfully extracted MS2PIP_Features:", MS2PIP_feat_df.shape)
@@ -74,7 +96,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _ms2pip_rescore_path is not None:
             MS2PIP_rescore_feat_df = read_pin_file(_ms2pip_rescore_path)
         else:
-            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features(id_file=_id, peprec_file=_peprec_path, mgf_file=_mgf_path, out_dir=_out)
+            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features(id_file=_id, peprec_file=_preprec_path, mgf_file=_mgf_path, out_dir=_out)
 
         print("Successfully extracted MS2PIP_rescore Features:",
               MS2PIP_rescore_feat_df.shape)

@@ -1,6 +1,6 @@
 [project]
 name = "nuxl_rescore"
-version = "0.1.0"
+version = "0.2.0"
 description = "NuXL_rescore: rescoring pipeline for protein‐nucleic acid cross‐links."
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -57,7 +57,7 @@ dependencies = [
 ]
 
 [project.scripts]
-nuxl_rescore = "nuxl_rescore.run:main"
+nuxl_rescore = "nuxl_rescore.main:main"
 
 [project.urls]
 GitHub = "https://github.com/Arslan-Siraj/NuXL_rescore/"
