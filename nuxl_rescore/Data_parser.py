@@ -566,7 +566,7 @@ def annotate_features(feature_config_path: str, feature_out: bool, out_dir: str,
         else:
           final_df = pd.concat(list_feat_df, axis=1)
           if(feature_out):
-            final_df.to_csv(out_dir) + "All_extra_features.csv")
+            final_df.to_csv(out_dir) + "All_extra_features.csv"
             print("All new features written at: ", out_dir + "All_extra_features.csv")
             
           extra_feat_name = list(final_df.columns)
@@ -576,6 +576,7 @@ def annotate_features(feature_config_path: str, feature_out: bool, out_dir: str,
             
           All_new_feat = final_df[extra_feat_name]          
           if All_new_feat is not None:
+            All_new_feat = All_new_feat.loc[:, ~All_new_feat.columns.duplicated()]
             iteratable_list = []
             extra_feat_name = All_new_feat.columns
             #print("All_extra_columns: ", extra_feat_name)
