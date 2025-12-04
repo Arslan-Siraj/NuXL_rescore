@@ -12,7 +12,8 @@ from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _feat_out=True,
     _model_path=None, _ms2pip=None, _ms2pip_path=None,
     _ms2pip_rescore=None, _ms2pip_rescore_path=None,
-    _rt_model=None, _entrap=None, _actual_db=None, _out=None, _preprec_path=None, _mgf_path=None
+    _rt_model=None, _entrap=None, _actual_db=None, _out=None, _peprec_path=None, _mgf_path=None,
+    _perc_exec=None, _perc_adapter=None
 ):
     """
     explicit function arguments when called as Python API.
@@ -35,8 +36,10 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     _entrap: {_entrap}
     _actual_db: {_actual_db}
     _out: {_out}
-    _preprec_path: {_preprec_path}
-    _mgf_path: {_mgf_path}
+    _peprec_path: {_peprec_path}
+    _mgf_path: {_mgf_path},
+    _perc_exec={_perc_exec}, 
+    _perc_adapter={_perc_adapter}
         """
     )
 
@@ -79,7 +82,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _ms2pip_path is not None:
             MS2PIP_feat_df = pd.read_csv(_ms2pip_path)
         else:
-            MS2PIP_path = Take_MS2PIP_features(id_file=_id, peprec_file=_preprec_path, mgf_file=_mgf_path, out_dir=_out, feat_config_path=_feat_config)
+            MS2PIP_path = Take_MS2PIP_features(id_file=_id, peprec_file=_peprec_path, mgf_file=_mgf_path, out_dir=_out, feat_config_path=_feat_config)
             MS2PIP_feat_df = pd.read_csv(MS2PIP_path)
 
         print("Successfully extracted MS2PIP_Features:", MS2PIP_feat_df.shape)
@@ -96,7 +99,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _ms2pip_rescore_path is not None:
             MS2PIP_rescore_feat_df = read_pin_file(_ms2pip_rescore_path)
         else:
-            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features(id_file=_id, peprec_file=_preprec_path, mgf_file=_mgf_path, out_dir=_out)
+            MS2PIP_rescore_feat_df = Take_MS2PIP_rescore_features(id_file=_id, peprec_file=_peprec_path, mgf_file=_mgf_path, out_dir=_out)
 
         print("Successfully extracted MS2PIP_rescore Features:",
               MS2PIP_rescore_feat_df.shape)
@@ -117,8 +120,21 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         MS2PIP_rescore_feat_df
     )
 
-    out_file = _id.split("/")[-1]
-    Feat_idXML_out_path = f"{_out}/updated_{out_file}"
+    if _rt_model and _ms2pip:
+        out_file = _id.split("/")[-1]
+        Feat_idXML_out_path = f"{_out}/RT_Int_feat_{out_file}"
+    
+    elif _rt_model and _ms2pip == False:
+        out_file = _id.split("/")[-1]
+        Feat_idXML_out_path = f"{_out}/RT_feat_{out_file}"
+
+    elif _ms2pip and _rt_model == None:
+        out_file = _id.split("/")[-1]
+        Feat_idXML_out_path = f"{_out}/Int_feat_{out_file}"
+    
+    else:
+        out_file = _id.split("/")[-1]
+        Feat_idXML_out_path = f"{_out}/updated_feat_{out_file}"
 
     IdXMLFile().store(Feat_idXML_out_path, prot_ids, pep_ids)
     print("==> Updated idXML stored at:", Feat_idXML_out_path)
@@ -157,7 +173,6 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         unq_feat = FDR_unique_PSMs(Feat_perc_result_file + '.idXML')
         entrapment_calculations(unq, unq_feat, actual)
         
-
 
 '''def main():
 

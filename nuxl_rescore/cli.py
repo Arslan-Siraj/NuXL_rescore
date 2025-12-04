@@ -1,6 +1,8 @@
 import os
 import argparse
 from .run import run_pipeline
+from pathlib import Path
+
 
 def build_parser():
     parser = argparse.ArgumentParser(prog="nuxl_rescore",
@@ -50,7 +52,7 @@ def build_parser():
         '-out',
         type=str,
         required=False,
-        default=os.getcwd()+"/Output/",
+        default=os.getcwd()+"/rescore_output/",
         metavar='out'
     )
     p_run.add_argument('-ms2pip', required=False, action='store_true')
@@ -98,9 +100,19 @@ def run_from_CLI(args):
         print("-----Configuation-----")
         for attr, value in vars(args).items():
             print(f"{attr}: {value}")
+
+        out_dir = Path(args.out)
+
+        # Create directory automatically if missing
+        if not out_dir.exists():
+            print("Ouput dir not exist!")
+            out_dir.mkdir(parents=True, exist_ok=True)
+            print("made dir at: ", out_dir)
             
         run_pipeline(_id=args.id, _calibration=args.calibration, _unimod=args.unimod, _feat_config=args.feat_config, _feat_out=args.feat_out,
         _model_path=args.model_path, _ms2pip=args.ms2pip, _ms2pip_path=args.ms2pip_path,
         _ms2pip_rescore=args.ms2pip_rescore, _ms2pip_rescore_path=args.ms2pip_rescore_path,
-        _rt_model=args.rt_model, _entrap=args.entrap, _actual_db=args.actual_db, _out=args.out, _preprec_path=args.peprec, _mgf_path=args.mgf
+        _rt_model=args.rt_model, _entrap=args.entrap, _actual_db=args.actual_db, _out=args.out, _peprec_path=args.peprec, _mgf_path=args.mgf,
+        _perc_exec=args.perc_exec, _perc_adapter=args.perc_adapter,
         )
+
