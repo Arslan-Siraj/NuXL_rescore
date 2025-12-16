@@ -88,7 +88,7 @@ run_from_cmd = [
     "-mgf", str(mgf_file),
     "-perc_exe", "percolator",
     "-perc_adapter", "PercolatorAdapter",
-    "-out", Path.cwd() / "rescore_out/",
+    "-out", Path.cwd() / "rescore_out/"
 ]
 
 subprocess.run(run_from_cmd, check=True)
