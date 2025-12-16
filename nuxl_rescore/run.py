@@ -9,6 +9,13 @@ from .entrapment import entrapment_calculations
 from .RT_features import predict_from_DeepLC, calculate_RTfeatures
 from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 
+import os
+import warnings
+# Ignore all UserWarnings
+warnings.filterwarnings("ignore", category=UserWarning)
+# Suppress TensorFlow logs
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _feat_out=True,
     _model_path=None, _ms2pip=None, _ms2pip_path=None,
     _ms2pip_rescore=None, _ms2pip_rescore_path=None,
