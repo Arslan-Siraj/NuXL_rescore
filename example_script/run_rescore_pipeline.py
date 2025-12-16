@@ -5,6 +5,42 @@ warnings.filterwarnings("ignore", category=UserWarning)
 from pathlib import Path
 from resource_manager import ensure_resources  
 
+# Download data for run pipeline
+import subprocess
+
+# Download data for run pipeline
+data_path = Path.cwd() / "data"
+
+if not data_path.exists():
+    data_path.mkdir(parents=True, exist_ok=True)
+
+idxml_file = data_path / "Example_RNA_UV_XL.idXML"
+if not idxml_file.exists():
+    # Use subprocess to download via wget
+    subprocess.run(
+        [
+            "wget",
+            "-O",
+            str(idxml_file),
+            "https://raw.githubusercontent.com/Arslan-Siraj/nuxl-app/rescore/example-data/idXMLs/Example_RNA_UV_XL.idXML",
+        ],
+        check=True,
+    )
+
+mgf_file = data_path / "Example_RNA_UV_XL.mgf"
+if not mgf_file.exists():
+    # Use subprocess to download via wget
+    subprocess.run(
+        [
+            "wget",
+            "-O",
+            str(mgf_file),
+            "https://raw.githubusercontent.com/Arslan-Siraj/nuxl-app/rescore/example-data/mzML/Example_RNA_UV_XL.mgf",
+        ],
+        check=True,
+    )
+
+
 # Download and extract nuxl rescore resources if not already present
 nuxl_resources_url = (
     "https://github.com/Arslan-Siraj/NuXL_rescore_resources/"
@@ -42,14 +78,16 @@ import subprocess
 
 run_from_cmd = [
     "nuxl_rescore", "run",
-    "-id", "/home/arslan/test_rescore/RNA_UV_Ecoli_S100_LB_bRfrac_9.idXML",
+    "-id", str(idxml_file),
     "-calibration", str(nuxl_rescore_resource_dir / "nuxl_rescore_resource/calibration_data/RNA_All.csv"),
     "-unimod", str(nuxl_rescore_resource_dir / "nuxl_rescore_resource/unimod/unimod_to_formula.csv"),
     "-feat_config", str(nuxl_rescore_resource_dir / "nuxl_rescore_resource/features-config.json"),
     "-rt_model", "DeepLC",
-    #"-ms2pip",
+    "-ms2pip",
     "-model_path", str(nuxl_rescore_resource_dir / "nuxl_rescore_resource/RT_deeplc_model/generic_model/full_hc_Train_RNA_All"),
-    "-mgf", "/home/arslan/test_rescore/RNA_UV_Ecoli_S100_LB_bRfrac_9.mgf",
+    "-mgf", str(mgf_file),
+    "-perc_exe", "percolator",
+    "-perc_adapter", "PercolatorAdapter",
     "-out", Path.cwd() / "rescore_out/",
 ]
 
