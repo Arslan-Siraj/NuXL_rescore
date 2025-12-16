@@ -11,6 +11,7 @@ from .ms2pip_features import Take_MS2PIP_features, Take_MS2PIP_rescore_features
 
 import os
 import warnings
+
 # Ignore all UserWarnings
 warnings.filterwarnings("ignore", category=UserWarning)
 # Suppress TensorFlow logs
@@ -26,29 +27,29 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     explicit function arguments when called as Python API.
     """
 
-    print(
-    f"""
-    Configuration:
-    _id: {_id}
-    _calibration: {_calibration}
-    _unimod: {_unimod}
-    _feat_config: {_feat_config}
-    _feat_out: {_feat_out}
-    _model_path: {_model_path}
-    _ms2pip: {_ms2pip}
-    _ms2pip_path: {_ms2pip_path}
-    _ms2pip_rescore: {_ms2pip_rescore}
-    _ms2pip_rescore_path: {_ms2pip_rescore_path}
-    _rt_model: {_rt_model}
-    _entrap: {_entrap}
-    _actual_db: {_actual_db}
-    _out: {_out}
-    _peprec_path: {_peprec_path}
-    _mgf_path: {_mgf_path},
-    _perc_exec: {_perc_exec}, 
-    _perc_adapter: {_perc_adapter}
-        """
-    )
+    #print(
+    #f"""
+    #Configuration:
+    #_id: {_id}
+    #_calibration: {_calibration}
+    #_unimod: {_unimod}
+    #_feat_config: {_feat_config}
+    #_feat_out: {_feat_out}
+    #_model_path: {_model_path}
+    #_ms2pip: {_ms2pip}
+    #_ms2pip_path: {_ms2pip_path}
+    #_ms2pip_rescore: {_ms2pip_rescore}
+    #_ms2pip_rescore_path: {_ms2pip_rescore_path}
+    #_rt_model: {_rt_model}
+    #_entrap: {_entrap}
+    #_actual_db: {_actual_db}
+    #_out: {_out}
+    #_peprec_path: {_peprec_path}
+    #_mgf_path: {_mgf_path},
+    #_perc_exec: {_perc_exec}, 
+    #_perc_adapter: {_perc_adapter}
+    #    """
+    #)
 
     print("==> idXML Loading")
     protein_ids = []
