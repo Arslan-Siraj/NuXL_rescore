@@ -38,8 +38,8 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     _out: {_out}
     _peprec_path: {_peprec_path}
     _mgf_path: {_mgf_path},
-    _perc_exec={_perc_exec}, 
-    _perc_adapter={_perc_adapter}
+    _perc_exec: {_perc_exec}, 
+    _perc_adapter: {_perc_adapter}
         """
     )
 

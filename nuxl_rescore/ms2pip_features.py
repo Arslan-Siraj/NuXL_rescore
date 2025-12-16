@@ -205,7 +205,7 @@ def Take_MS2PIP_features(id_file: str, peprec_file: str, mgf_file: str, out_dir:
         print("Initialized MS2PIP CONFIG----\n", CONFIG)
         psm_list = get_psm_list(CONFIG["ms2rescore"]["psm_file"])
         ms2pip_features_out = Take_ms2pip_features(psm_list, file_stem, feat_config_path, out_dir) 
-        print("Error: unable_initialized please provide (.mgf) file")
+        #print("Error: unable_initialized please provide (.mgf) file")
 
     return ms2pip_features_out
 

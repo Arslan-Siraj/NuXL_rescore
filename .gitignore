@@ -8,3 +8,4 @@ nuxl_rescore.egg-info/
 .venv-test/
 /example_script/nuxl_rescore_resource/
 /example_script/rescore_out/
+/example_script/data/

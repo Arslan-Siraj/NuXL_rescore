@@ -61,14 +61,14 @@ def build_parser():
         '-perc_exec',
         type=str,
         required=False,
-        default="/home/ubuntu/home/siraj/Percolator/percolator",
+        default="percolator",
         metavar='perc_exec'
     )
     p_run.add_argument(
         '-perc_adapter',
         type=str,
         required=False,
-        default="/home/ubuntu/Openms_Test/OpenMS-build/bin/PercolatorAdapter",
+        default="PercolatorAdapter",
         metavar='perc_adapter'
     )
     p_run.add_argument('-feat_out', required=False, action='store_true')
@@ -97,9 +97,6 @@ def build_parser():
 def run_from_CLI(args):
          
     if args.command == "run":
-        print("-----Configuation-----")
-        for attr, value in vars(args).items():
-            print(f"{attr}: {value}")
 
         out_dir = Path(args.out)
 

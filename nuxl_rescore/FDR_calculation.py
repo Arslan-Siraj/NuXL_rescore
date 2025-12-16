@@ -1,7 +1,9 @@
 import os 
 import sys
+import subprocess
 import pandas as pd
 from pyopenms import *
+from pathlib import Path
 
 def FDR_filtering_perc(perc_result_path: str):
     """
@@ -155,35 +157,45 @@ def FDR_unique_PSMs(perc_result_path: str):
 
     return  outfile_path[0] + "_unique_1.0000_XLs.idXML"
 
-    
 def run_percolator(infile: str, perc_path: str, percadapter_path: str, out_dir: str):
     """
-    Perform rescoring with Percolator
-    Args:
-        infile: path tho idXML file containing identifications with added meta values
-        perc_path: path to Percolator executable
-        percadapter_path: path to OpenMS PercolatorAdapter
-    Returns:
-        perc_protein_ids: protein identifications after Percolator run
-        perc_peptide_ids: peptide identifications after Percolator run
-    """ 
-    
-    file_out_name = infile.split(".")
-    file_ = file_out_name[0].split('/')
-    write_out  = out_dir + file_[len(file_)-1]
-    
-    # Define the command for the PercolatorAdapter run
-    percadapter_command = percadapter_path + " -in " + infile + " -out " +write_out+"_perc.idXML " + \
-                          "-percolator_executable " + perc_path + " -out_pin "+write_out+"_perc_pin.tab " + \
-                          "-weights "+write_out+"_perc.weights -train_best_positive -unitnorm -post_processing_tdc -score_type svm "
+    Perform rescoring with Percolator.
 
-    return_code = os.system(percadapter_command)
-    if return_code == 0:
-      print("percadapter command ran successfully!")
-      print("percolator written at : ", write_out+"_perc")
-    else:
-        print("Error!! percadapter command encountered an error or failure.") 
-        sys.exit(1)  
+    Parameters
+    ----------
+    infile : str
+        Path to idXML file containing identifications with added meta-values.
+    perc_path : str
+        Path to the Percolator executable.
+    percadapter_path : str
+        Path to the OpenMS PercolatorAdapter executable.
+    out_dir : str
+        Output directory.
+    """
 
-    return write_out+"_perc"
-    
+    infile = Path(infile).resolve()
+    out_dir = Path(out_dir).resolve()
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    stem = infile.stem
+
+    out_idxml = out_dir / f"{stem}_perc.idXML"
+    out_pin = out_dir / f"{stem}_perc_pin.tab"
+    out_weights = out_dir / f"{stem}_perc.weights"
+
+    percadapter_command = [
+        percadapter_path,
+        "-in", str(infile),
+        "-out", str(out_idxml),
+        "-percolator_executable", perc_path,
+        "-out_pin", str(out_pin),
+        "-weights", str(out_weights),
+        "-train_best_positive",
+        "-unitnorm",
+        "-post_processing_tdc",
+        "-score_type", "svm",
+    ]
+
+    subprocess.run(percadapter_command, check=True)
+
+    return str(out_dir / f"{stem}_perc")
