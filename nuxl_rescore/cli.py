@@ -91,6 +91,7 @@ def build_parser():
         default="None",
         metavar='actual_db'
     )
+    p_run.add_argument('-plot_results', required=False, action='store_true')
 
     return parser
 
@@ -110,6 +111,6 @@ def run_from_CLI(args):
         _model_path=args.model_path, _ms2pip=args.ms2pip, _ms2pip_path=args.ms2pip_path,
         _ms2pip_rescore=args.ms2pip_rescore, _ms2pip_rescore_path=args.ms2pip_rescore_path,
         _rt_model=args.rt_model, _entrap=args.entrap, _actual_db=args.actual_db, _out=args.out, _peprec_path=args.peprec, _mgf_path=args.mgf,
-        _perc_exec=args.perc_exec, _perc_adapter=args.perc_adapter,
+        _perc_exec=args.perc_exec, _perc_adapter=args.perc_adapter, _plot_results=args.plot_results
         )
 

@@ -21,7 +21,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     _model_path=None, _ms2pip=None, _ms2pip_path=None,
     _ms2pip_rescore=None, _ms2pip_rescore_path=None,
     _rt_model=None, _entrap=None, _actual_db=None, _out=None, _peprec_path=None, _mgf_path=None,
-    _perc_exec=None, _perc_adapter=None
+    _perc_exec=None, _perc_adapter=None, _plot_results=False
 ):
     """
     explicit function arguments when called as Python API.
@@ -48,6 +48,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     #_mgf_path: {_mgf_path},
     #_perc_exec: {_perc_exec}, 
     #_perc_adapter: {_perc_adapter}
+    #_plot_results: {_plot_results}
     #    """
     #)
 
@@ -150,30 +151,37 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     # -----------------------------
     # PERCOLATOR
     # -----------------------------
-    perc_result_file = run_percolator(_id, _perc_exec, _perc_adapter, _out)
-    FDR_perc_file = FDR_filtering_perc(perc_result_file + '.idXML')
+    if _plot_results:
+        print("==> Percolator and FDR without extra features")
+        perc_result_file = run_percolator(_id, _perc_exec, _perc_adapter, _out)
+        FDR_perc_file = FDR_filtering_perc(perc_result_file + '.idXML')
 
     print("==> Percolator and FDR with extra features")
     Feat_perc_result_file = run_percolator(
         Feat_idXML_out_path, _perc_exec, _perc_adapter, _out
     )
 
-    plot_weights_perc(Feat_perc_result_file + '.weights', extra_feat_names)
+    if _plot_results:
+        plot_weights_perc(Feat_perc_result_file + '.weights', extra_feat_names)
+
+    print("==> FDR calculation with extra features")
     Feat_FDR_perc_file = FDR_filtering_perc(Feat_perc_result_file + '.idXML')
 
     # -----------------------------
     # ENTRAPMENT OR COMPARISON
     # -----------------------------
     if not _entrap:
-        comparison_PSMs(
-            Feat_perc_result_file + '_0.0100_XLs.idXML',
-            perc_result_file + '_0.0100_XLs.idXML'
-        )
+        if _plot_results:
+            print("==> Generating PseudoROC plots")
+            comparison_PSMs(
+                Feat_perc_result_file + '_0.0100_XLs.idXML',
+                perc_result_file + '_0.0100_XLs.idXML'
+            )
 
-        XL_all = perc_result_file + '_1.0000_XLs.idXML'
-        XL_feat_all = Feat_perc_result_file + '_1.0000_XLs.idXML'
+            XL_all = perc_result_file + '_1.0000_XLs.idXML'
+            XL_feat_all = Feat_perc_result_file + '_1.0000_XLs.idXML'
 
-        plot_FDR_plot(XL_all, XL_feat_all)
+            plot_FDR_plot(XL_all, XL_feat_all)
 
     else:
         actual = read_fasta(_actual_db)
