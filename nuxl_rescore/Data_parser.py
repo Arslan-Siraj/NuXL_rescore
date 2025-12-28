@@ -2,7 +2,6 @@ import pandas as pd
 import json
 import re
 import math
-from argparser import args
 from Bio import SeqIO
 import numpy as np
 from scipy.stats import pearsonr
@@ -378,10 +377,11 @@ def Conversion_to_DF(file_name):
     return Desc_df, Proteins_df, PSMs_df 
     
     
-def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = None, MS2PIP_feature: pd.DataFrame = None, MS2PIP_rescore_feature: pd.DataFrame = None) -> list:
+def annotate_features(feature_config_path: str, feature_out: bool, out_dir: str, prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = None, MS2PIP_feature: pd.DataFrame = None, MS2PIP_rescore_feature: pd.DataFrame = None) -> list:
     """
     Adds a custom meta value containing the RT predictions, intensities features.
     Args:
+        feature_config_path: str: path to feature config file
         prot_ids:       protein identifications
         pep_ids:        peptide identifications
         RT_feature:     A Dataframe RT predictions features
@@ -390,7 +390,7 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
     Returns:
         Annotated protein and peptide ids, extra feature names
     """
-    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(args.feat_config)
+    rt_feat_l, ms2pip_feat_l, b_ions, y_ions, corr_all, inten_feat, ms2pip_rescore_feat_l, ms2pip_mod =  read_features_config(feature_config_path)
    
     list_feat_df = []
     if RT_feature is not None:
@@ -439,9 +439,9 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
     if (RT_feature is not None and MS2PIP_feature is None and MS2PIP_rescore_feature is None):
       print("Test Retention Time Features ")
       final_df = pd.concat(list_feat_df, axis=1)
-      if(args.feat_out):
-        final_df.to_csv(args.out + "All_extra_features.csv")
-        print("All new features written at: ", args.out + "All_extra_features.csv")
+      if(feature_out):
+        final_df.to_csv(out_dir + "All_extra_features.csv")
+        print("All new features written at: ", out_dir + "All_extra_features.csv")
         
       extra_feat_name = list(final_df.columns)
       print("extra_feat_name: ", extra_feat_name)
@@ -492,9 +492,9 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
             final_df['rank'] = final_df['rank'].astype(str)
             final_df['spec_id_rank'] = final_df['spec_id'] + '_' + final_df['rank']
             
-            if(args.feat_out):
-              final_df.to_csv(args.out + "All_extra_features.csv")
-              print("All new features written at: ", args.out + "All_extra_features.csv")
+            if(feature_out):
+              final_df.to_csv(out_dir + "All_extra_features.csv")
+              print("All new features written at: ", out_dir + "All_extra_features.csv")
             
             extra_feat_name = list(final_df.columns)
             extra_feat_name.remove('spec_id')
@@ -565,9 +565,9 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
             
         else:
           final_df = pd.concat(list_feat_df, axis=1)
-          if(args.feat_out):
-            final_df.to_csv(args.out + "All_extra_features.csv")
-            print("All new features written at: ", args.out + "All_extra_features.csv")
+          if(feature_out):
+            final_df.to_csv(out_dir) + "All_extra_features.csv"
+            print("All new features written at: ", out_dir + "All_extra_features.csv")
             
           extra_feat_name = list(final_df.columns)
           print("extra_feat_name: ", extra_feat_name)
@@ -576,6 +576,7 @@ def annotate_features(prot_ids: list, pep_ids: list, RT_feature: pd.DataFrame = 
             
           All_new_feat = final_df[extra_feat_name]          
           if All_new_feat is not None:
+            All_new_feat = All_new_feat.loc[:, ~All_new_feat.columns.duplicated()]
             iteratable_list = []
             extra_feat_name = All_new_feat.columns
             #print("All_extra_columns: ", extra_feat_name)

@@ -1,10 +1,9 @@
 import os
 import pandas as pd
-from argparser import args
 from deeplc.feat_extractor import FeatExtractor
 from deeplc import DeepLC
   
-def predict_from_DeepLC(peptides: pd.DataFrame, calibration: pd.DataFrame = None) -> list:
+def predict_from_DeepLC(peptides: pd.DataFrame, unimod_path: str, model_path: str, calibration: pd.DataFrame = None) -> list:
     """
     Make predictions based on a given peptide DataFrame and an optional
     calibration DataFrame using DeepLC.
@@ -15,16 +14,16 @@ def predict_from_DeepLC(peptides: pd.DataFrame, calibration: pd.DataFrame = None
     """
 
     #extract all modifications 
-    if os.path.isfile(args.unimod):
-         features = FeatExtractor(args.unimod)
+    if os.path.isfile(unimod_path):
+         features = FeatExtractor(unimod_path)
     else:
-        print("Error!!! modification file not found at", args.unimod)
+        print("Error!!! modification file not found at", unimod_path)
     
     dlc = DeepLC(
         path_model=[
-            args.model_path+"_1fd8363d9af9dcad3be7553c39396960.hdf5",
-            args.model_path+"_8c22d89667368f2f02ad996469ba157e.hdf5",
-            args.model_path+"_cb975cfdd4105f97efa0b3afffe075cc.hdf5"
+            model_path+"_1fd8363d9af9dcad3be7553c39396960.hdf5",
+            model_path+"_8c22d89667368f2f02ad996469ba157e.hdf5",
+            model_path+"_cb975cfdd4105f97efa0b3afffe075cc.hdf5"
         ],
         f_extractor = features,
         pygam_calibration=True
