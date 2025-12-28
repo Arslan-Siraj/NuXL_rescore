@@ -170,6 +170,6 @@ CONFIG = {  'ms2rescore':
                     'frag_error': 0.02}
         }
 ```
-## Run-example-script
+## Run example script
 Can run the nuxl_rescore pipline from example_script/run_rescore_pipeline.py. it will automatically download the nuxl_rescore resources and example files. </br> here is the example files and nuxl_rescore resources: https://github.com/Arslan-Siraj/NuXL_rescore_resources/tree/main
 
