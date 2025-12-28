@@ -14,6 +14,7 @@ def FDR_filtering_perc(perc_result_path: str):
         outfile_path[0]: output file path 
     """ 
 
+    print("==> FDR filtering percolator results")
     perc_proteins = []
     perc_peptides = []
   
@@ -183,6 +184,7 @@ def run_percolator(infile: str, perc_path: str, percadapter_path: str, out_dir: 
     out_pin = out_dir / f"{stem}_perc_pin.tab"
     out_weights = out_dir / f"{stem}_perc.weights"
 
+    print("==> Running Percolator")
     percadapter_command = [
         percadapter_path,
         "-in", str(infile),

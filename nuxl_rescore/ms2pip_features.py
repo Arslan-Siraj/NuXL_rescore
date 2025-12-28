@@ -108,7 +108,7 @@ def Take_ms2pip_features(psm_list, out_file, feat_config_path, out_dir):
     }
     ) 
 
-    print("==> Extracting_ms2pip_features")
+    print("==> Taking predictions from MS2PIP model")
     n_duplicate = defaultdict(lambda: 1)
     number_duplicates_per_spec = 1
 

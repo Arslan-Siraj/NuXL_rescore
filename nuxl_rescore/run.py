@@ -68,14 +68,13 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         RT_id_cols = peptide_ids_to_dataframe(peptide_ids)
 
         if _rt_model == "DeepLC":
-            print("-->>> selected RT model: DeepLC")
-
             calibration_data = pd.read_csv(_calibration)
 
+            print("==> Taking from DeepLC model")
             RT_predictions = predict_from_DeepLC(RT_id_cols, unimod_path=_unimod, model_path=_model_path, calibration=calibration_data)
             RT_predictions_feat_df = calculate_RTfeatures(RT_predictions)
 
-            print("Successfully extracted RT_features:", RT_predictions_feat_df.shape)
+            print("==> Successfully extracted RT_features:", RT_predictions_feat_df.shape)
             RT_features_path = f"{_out}/RT_features.csv"
             RT_predictions_feat_df.to_csv(RT_features_path)
 
@@ -119,7 +118,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
     # -----------------------------
     # ANNOTATE FEATURES & STORE NEW idXML
     # -----------------------------
-    print("==> writing features in idXML file")
+    print("==> Annotating features in idXML file")
 
     prot_ids, pep_ids, extra_feat_names = annotate_features(
         _feat_config, _feat_out, _out, 
@@ -146,7 +145,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         Feat_idXML_out_path = f"{_out}/updated_feat_{out_file}"
 
     IdXMLFile().store(Feat_idXML_out_path, prot_ids, pep_ids)
-    print("==> Updated idXML stored at:", Feat_idXML_out_path)
+    print("==> Annotated idXML stored at:", Feat_idXML_out_path)
 
     # -----------------------------
     # PERCOLATOR
