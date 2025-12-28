@@ -171,5 +171,13 @@ CONFIG = {  'ms2rescore':
         }
 ```
 ## Run example script
-Can run the nuxl_rescore pipline from example_script/run_rescore_pipeline.py. it will automatically download the nuxl_rescore resources and example files. </br> here is the example files and nuxl_rescore resources: https://github.com/Arslan-Siraj/NuXL_rescore_resources/tree/main
+
+Create environment
+
+```
+conda create -n "nuxl_rescore_env" python==3.10
+conda activate nuxl_rescore_env
+pip install nuxl-rescore==0.2.0
+```
+then run the nuxl_rescore pipline from **example_script/run_rescore_pipeline.py**. it will automatically download the nuxl_rescore resources and example files. </br> here is the example files and nuxl_rescore resources: https://github.com/Arslan-Siraj/NuXL_rescore_resources/tree/main
 
