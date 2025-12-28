@@ -12,6 +12,7 @@ Siraj, A., Bouwmeester, R., Declercq, A., Welp, L., Chernev, A., Wulf, A., ... &
 - [Feature configurations](#Feature-configuration) 
 - [Output](#Output)
 - [Fine tunning and feature extraction](#Fine-tunning-and-feature-extraction)
+- [Run example script](#Run-example-script)
 
 ---
 
@@ -169,3 +170,6 @@ CONFIG = {  'ms2rescore':
                     'frag_error': 0.02}
         }
 ```
+## Run-example-script
+Can run the nuxl_rescore pipline from example_script/run_rescore_pipeline.py. it will automatically download the nuxl_rescore resources and example files. </br> here is the example files and nuxl_rescore resources: https://github.com/Arslan-Siraj/NuXL_rescore_resources/tree/main
+
