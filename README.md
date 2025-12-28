@@ -20,21 +20,20 @@ Siraj, A., Bouwmeester, R., Declercq, A., Welp, L., Chernev, A., Wulf, A., ... &
 ### Command line interface
 
 ```
-usage: run.py [-h] -id id [-rt_model rt_model] [-calibration calibration] [-model_path model_path] [-unimod unimod]
-              [-out out] [-ms2pip] [-ms2pip_rescore] [-perc_exec perc_exec] [-perc_adapter perc_adapter] [-feat_out]
-              [-ms2pip_path ms2pip_path] [-ms2pip_rescore_path ms2pip_rescore_path] [-mgf mgf] [-peprec peprec]
-              [-feat_config feat_config] [-entrap] [-actual_db actual_db]
+usage: nuxl_rescore run [-h] [-id id] [-rt_model rt_model] [-calibration calibration] [-model_path model_path]
+                        [-unimod unimod] [-out out] [-ms2pip] [-ms2pip_rescore] [-perc_exec perc_exec]
+                        [-perc_adapter perc_adapter] [-feat_out] [-ms2pip_path MS2PIP_PATH]
+                        [-ms2pip_rescore_path MS2PIP_RESCORE_PATH] [-mgf MGF] [-peprec PEPREC] [-feat_config feat_config]
+                        [-entrap] [-actual_db actual_db] [-plot_results]
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  -id id                Input file (idXML format) path: where search for .preperc file if MS2PIP feature active
+  -id id                Input file (idXML format) …
   -rt_model rt_model    if None no RT feature consider
-  -calibration calibration
-                        DeepLC calibration data path (.csv)
-  -model_path model_path
-                        model path with name like full_hc_Train_RNA_All
-  -unimod unimod        unimod/NuXL modification example /unimod/unimod_to_formula.csv
-  -out out              output folder path
+  -calibration calibration DeepLC calibration data path (.csv)
+  -model_path model_path  model path with name like full_hc_Train_RNA_All
+  -unimod unimod  unimod/NuXL modification example /unimod/unimod_to_formula.csv
+  -out out output folder path
   -ms2pip               Extract ms2pip features {bool}
   -ms2pip_rescore       Extract ms2pip_rescore features {bool}
   -perc_exec perc_exec  percolater executable path (Full path)
@@ -51,6 +50,7 @@ optional arguments:
                         Path for feature config (.json file) need for features used for rescoring
   -entrap               Entrapment testing {bool}
   -actual_db actual_db  Path for database (.fasta file) actual protein correspond to actual protocol
+  -plot_results Plots PseudoROC comparison plot, percolator weight plot {bool}
 
 ```
 ### What format of file should be given for analysis? <br />
@@ -63,19 +63,19 @@ If already MS2Rescore features extracted <br />
 
 ### How to do different analysis? <br />
 #### Used only retention time features in rescoring<br />
-&emsp;```python run.py -id -model_path -unimod -calibration -perc_exec -perc_adapter -out``` <br />
+&emsp;```nuxl_rescore run -id -model_path -unimod -calibration -perc_exec -perc_adapter -out``` <br />
 
 #### Used only intensity features in rescoring<br />
-&emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip (store_true) -ms2pip_path  or -mgf``` <br /> 
+&emsp;```nuxl_rescore run -id -rt_model None -perc_exec -perc_adapter -out -ms2pip (store_true) -ms2pip_path  or -mgf``` <br /> 
 
 #### Used only MS2Rescore features in rescoring<br />
-&emsp;```python run.py -id -rt_model None -perc_exec -perc_adapter -out -ms2pip_rescore (store_true) -ms2pip_rescore_path  or -mgf``` <br /> 
+&emsp;```nuxl_rescore run -id -rt_model None -perc_exec -perc_adapter -out -ms2pip_rescore (store_true) -ms2pip_rescore_path  or -mgf``` <br /> 
 
 #### *will work for adaptation of multiple features e-g RT+intensities as <br /> 
-&emsp;```python run.py -id model_path -calibration -unimod -perc_exec -perc_adapter -out -ms2pip (store_true) -ms2pip_path  or -mgf``` <br />
+&emsp;```nuxl_rescore run -id model_path -calibration -unimod -perc_exec -perc_adapter -out -ms2pip (store_true) -ms2pip_path  or -mgf``` <br />
 
 #### entrapment testing <br />
-&emsp;```run.py -entrap (store_true) -actual_db (actual database of sample)``` <br />
+&emsp;```nuxl_rescore run.py -entrap (store_true) -actual_db (actual database of sample)``` <br />
 
 ## Feature configuration
 
