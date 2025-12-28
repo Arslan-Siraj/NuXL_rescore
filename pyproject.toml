@@ -6,6 +6,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
     { name = "Arslan Siraj", email = "arslan.siraj@uni-tuebingen.de" },
+    { name = "Arslan Siraj" },
     { name = "Timo Sachsenberg" },
 ]
 classifiers = [
