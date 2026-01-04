@@ -1,6 +1,6 @@
 [project]
 name = "nuxl_rescore"
-version = "0.2.0"
+version = "0.3.0"
 description = "NuXL_rescore: rescoring pipeline for protein‐nucleic acid cross‐links."
 readme = "README.md"
 license = { file = "LICENSE" }
