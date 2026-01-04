@@ -70,7 +70,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _rt_model == "DeepLC":
             calibration_data = pd.read_csv(_calibration)
 
-            print("==> Taking from DeepLC model")
+            print("==> Taking predictions from DeepLC model")
             RT_predictions = predict_from_DeepLC(RT_id_cols, unimod_path=_unimod, model_path=_model_path, calibration=calibration_data)
             RT_predictions_feat_df = calculate_RTfeatures(RT_predictions)
 
