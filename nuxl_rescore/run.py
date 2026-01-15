@@ -70,7 +70,7 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         if _rt_model == "DeepLC":
             calibration_data = pd.read_csv(_calibration)
 
-            print("==> Taking predictions from DeepLC model")
+            print("==> Taking from DeepLC model")
             RT_predictions = predict_from_DeepLC(RT_id_cols, unimod_path=_unimod, model_path=_model_path, calibration=calibration_data)
             RT_predictions_feat_df = calculate_RTfeatures(RT_predictions)
 
@@ -128,21 +128,20 @@ def run_pipeline(_id=None, _calibration=None, _unimod=None, _feat_config=None, _
         MS2PIP_rescore_feat_df
     )
 
-    if _rt_model and _ms2pip:
-        out_file = _id.split("/")[-1]
-        Feat_idXML_out_path = f"{_out}/RT_Int_feat_{out_file}"
-    
-    elif _rt_model and _ms2pip == False:
-        out_file = _id.split("/")[-1]
-        Feat_idXML_out_path = f"{_out}/RT_feat_{out_file}"
+    # Get the base filename safely
+    out_file = os.path.basename(_id)
 
-    elif _ms2pip and _rt_model == None:
-        out_file = _id.split("/")[-1]
-        Feat_idXML_out_path = f"{_out}/Int_feat_{out_file}"
-    
+    # Determine the output filename
+    if _rt_model and _ms2pip:
+        feat_filename = f"RT_Int_feat_{out_file}"
+    elif _rt_model and not _ms2pip:
+        feat_filename = f"RT_feat_{out_file}"
+    elif _ms2pip and _rt_model is None:
+        feat_filename = f"Int_feat_{out_file}"
     else:
-        out_file = _id.split("/")[-1]
-        Feat_idXML_out_path = f"{_out}/updated_feat_{out_file}"
+        feat_filename = f"updated_feat_{out_file}"
+        
+    Feat_idXML_out_path = os.path.join(_out, feat_filename)
 
     IdXMLFile().store(Feat_idXML_out_path, prot_ids, pep_ids)
     print("==> Annotated idXML stored at:", Feat_idXML_out_path)
